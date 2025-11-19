@@ -1,0 +1,107 @@
+{
+  "version": "0.2.0",
+  "timestamp": "2025-11-19T18:21:11.630Z",
+  "checks": {
+    "versionConsistency": true,
+    "tests": {
+      "passed": 302,
+      "failed": 0,
+      "success": true
+    },
+    "build": true,
+    "git": {
+      "clean": false,
+      "changes": 3
+    },
+    "npmAuth": true
+  },
+  "bundles": [
+    {
+      "name": "primalib.cjs",
+      "size": "51.32 KB",
+      "path": "dist/primalib.cjs"
+    },
+    {
+      "name": "primalib.min.js",
+      "size": "49.66 KB",
+      "path": "dist/primalib.min.js"
+    },
+    {
+      "name": "primalib.min.mjs",
+      "size": "49.14 KB",
+      "path": "dist/primalib.min.mjs"
+    }
+  ],
+  "components": [
+    {
+      "name": "@primalib/core",
+      "version": "0.2.0",
+      "path": "core/",
+      "size": "137.08 KB"
+    },
+    {
+      "name": "@primalib/geo",
+      "version": "0.2.0",
+      "path": "geo/",
+      "size": "31.46 KB"
+    },
+    {
+      "name": "@primalib/num",
+      "version": "0.2.0",
+      "path": "num/",
+      "size": "47.96 KB"
+    },
+    {
+      "name": "@primalib/stat",
+      "version": "0.2.0",
+      "path": "stat/",
+      "size": "35.70 KB"
+    },
+    {
+      "name": "@primalib/lin",
+      "version": "0.2.0",
+      "path": "lin/",
+      "size": "56.59 KB"
+    },
+    {
+      "name": "@primalib/topo",
+      "version": "0.2.0",
+      "path": "topo/",
+      "size": "25.58 KB"
+    },
+    {
+      "name": "@primalib/tree",
+      "version": "0.2.0",
+      "path": "tree/",
+      "size": "40.72 KB"
+    },
+    {
+      "name": "@primalib/web",
+      "version": "0.2.0",
+      "path": "web/",
+      "size": "164.72 KB"
+    }
+  ],
+  "statistics": {
+    "code": {
+      "files": 37,
+      "lines": 8492,
+      "size": "1993 KB"
+    },
+    "tests": {
+      "files": 20,
+      "lines": 4272
+    },
+    "documentation": {
+      "files": 59,
+      "lines": 22189
+    },
+    "bundles": {
+      "files": 8,
+      "size": "821.26 KB"
+    },
+    "modules": 8,
+    "totalLines": 34953
+  },
+  "ready": true
+}
