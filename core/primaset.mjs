@@ -634,6 +634,8 @@ if (primaSet.pipe !== pipeBackup) {
 
 // Export methods for direct access
 export { primaSet, operations, methods, generators }
+// Export all operations as standalone functions (destructure from primaSet - handles both numbers and PrimaSets)
+export const { sq, inv, neg, add, sub, mul, div, mod, mean, sum, min, max, clamp, sigmoid, factorial, gcd, lcm, firstDivisor, isPrime } = primaSet
 // Export pipe as standalone function
 export const pipe = primaSet.pipe
 // Export point structures (unified architecture)
