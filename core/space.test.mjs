@@ -3,6 +3,7 @@
 import { test } from '../test/test.mjs'
 import { space, algebraicSpace, complexSpace, quaternionSpace, octonionSpace, ALGEBRAIC_DIMS } from './space.mjs'
 import { point, complex, quaternion, octonion } from './point.mjs'
+import { point, complex, quaternion, octonion } from './point.mjs'
 
 // ============================================================================
 // BASIC SPACE CREATION

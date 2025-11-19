@@ -1,6 +1,8 @@
 import { primaSet } from '../core/primaset.mjs'
 import { primes, isPrimeGeometric } from '../num/primanum.mjs'
 import { operations } from '../core/primaops.mjs'
+import { primes, isPrimeGeometric } from '../num/primanum.mjs'
+import { operations } from '../core/primaops.mjs'
 
 const firstDivisor = operations.firstDivisor;
 const isPrime = operations.isPrime;
