@@ -11,7 +11,7 @@ import {
   movingAverage, differences,
   goodnessOfFit, hlComparison, summary
 } from './primastat.mjs'
-import { primes, primeGaps, twins } from 'primalib'
+import { primes, primeGaps, twins } from '../num/primanum.mjs'
 
 // ============================================================================
 // BASIC STATISTICS

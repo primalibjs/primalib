@@ -14,7 +14,7 @@ import {
   addPolynomials, subtractPolynomials, multiplyPolynomials, dividePolynomials,
   composePolynomials, findRoots, polynomialSequence
 } from './primalin.mjs'
-import { point } from 'primalib'
+import { point } from '../geo/primageo.mjs'
 
 // ============================================================================
 // VECTORS - Extending point from primageo
