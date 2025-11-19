@@ -4,7 +4,7 @@
  * Foundation for Virtual DOM using PrimaSet's power
  */
 
-import { primaSet } from '@primalib/core'
+import { primaSet } from '../core/primaset.mjs'
 
 // ============================================================================
 // NODE FACTORY - Creates PrimaSet with tree capabilities

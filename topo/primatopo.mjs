@@ -3,7 +3,7 @@
  * Genus, Euler characteristic, fiber bundles, and topological properties
  */
 
-import { primaSet, point, space } from '@primalib/core';
+import { primaSet, point, space } from '../core/primaset.mjs';
 
 // ---------- Genus Mapping ----------
 const GENUS_MAP = {

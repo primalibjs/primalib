@@ -4,7 +4,7 @@
  *  Advanced analytics for prime distribution, hypercube properties, and conjectures
  */
 
-import { primaSet } from "@primalib/core"
+import { primaSet } from "../core/primaset.mjs"
 
 // ============================================================================
 // BASIC UTILITIES

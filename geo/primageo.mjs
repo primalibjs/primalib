@@ -3,7 +3,7 @@
  * Geometric primitives and helpers (points/spaces imported from core)
  */
 
-import { primaSet, point, complex, quaternion, octonion, space } from '@primalib/core';
+import { primaSet, point, complex, quaternion, octonion, space } from '../core/primaset.mjs';
 
 // ---------- Power-of-2 Constants ----------
 const POWER2_DIMS = [2, 4, 8, 16, 32]

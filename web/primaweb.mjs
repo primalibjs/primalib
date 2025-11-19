@@ -11,7 +11,7 @@
  *   PrimaWeb.say('# Hello', '#other') // Direct: can override target
  */
 
-import { primaSet } from '@primalib/core'
+import { primaSet } from '../core/primaset.mjs'
 import { env, include } from './primaenv.mjs'
 import * as primalib from 'primalib'
 

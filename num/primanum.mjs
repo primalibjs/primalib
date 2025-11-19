@@ -4,7 +4,7 @@
  *  Plugin <-> FreeFunction symmetry through composition
  */
 
-import { primaSet, operations, point, space, complex, quaternion, octonion } from "@primalib/core"
+import { primaSet, operations, point, space, complex, quaternion, octonion } from "../core/primaset.mjs"
 
 // Remove validate helper - use type system instead
 // No more validate functions - rely on primaSet(typecheck)

@@ -4,7 +4,7 @@
  * Part of PrimaWeb - environment-aware layer
  */
 
-import { primaSet } from '@primalib/core'
+import { primaSet } from '../core/primaset.mjs'
 
 const detectEnv = () => {
   const globalObj = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : null

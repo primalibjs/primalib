@@ -1,6 +1,6 @@
 {
   "name": "@primalib/core",
-  "version": "0.2.0",
+  "version": "0.2.01",
   "description": "PrimaLib core - lazy set factory and operations",
   "main": "./primaset.mjs",
   "types": "./primaset.d.ts",
