@@ -220,22 +220,27 @@ npm access ls-packages
 ### Before First Deployment
 
 ```bash
-# 1. Ensure logged into npm
+# 1. Link package locally (for tests)
+npm link
+
+# 2. Ensure logged into npm
 npm login
 npm whoami
 
-# 2. Install dependencies
+# 3. Install dependencies
 npm install
 
-# 3. Run tests
+# 4. Run tests
 npm test
 
-# 4. Build bundles
+# 5. Build bundles
 npm run build
 
-# 5. Dry run
+# 6. Dry run
 npm run deploy:check
 ```
+
+**Why `npm link`?** Tests import `from "primalib"` which needs to resolve to the local version during development.
 
 ### Regular Deployment
 
