@@ -4,7 +4,8 @@
 
 import { test } from "../test/test.mjs"
 import { primaSet } from "./primaset.mjs"
-import { N, Z, R, primes, address, pipe } from "../num/primanum.mjs"
+import { N, Z, R, primes, address } from "../num/primanum.mjs"
+import { pipe } from "./primaset.mjs"
 import { range, histogram } from '../stat/primastat.mjs'
 import { point } from '../geo/primageo.mjs'
 
