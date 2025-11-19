@@ -1,6 +1,6 @@
 {
   "name": "@primalib/stat",
-  "version": "0.2.01",
+  "version": "0.2.02",
   "description": "PrimaLib statistics module - statistical analysis tools",
   "main": "./primastat.mjs",
   "type": "module",

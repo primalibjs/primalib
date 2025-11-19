@@ -1,6 +1,6 @@
 {
   "name": "@primalib/num",
-  "version": "0.2.01",
+  "version": "0.2.02",
   "description": "PrimaLib number theory module - primes, sequences, and number operations",
   "main": "./primanum.mjs",
   "type": "module",

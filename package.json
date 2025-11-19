@@ -1,6 +1,6 @@
 {
   "name": "primalib",
-  "version": "0.2.01",
+  "version": "0.2.02",
   "description": "PrimaLib - Complete math library with lazy sets, geometry, number theory, and more",
   "main": "./primalib.mjs",
   "module": "./dist/primalib.min.mjs",
@@ -25,22 +25,13 @@
       "types": "./primalib.d.ts",
       "default": "./primalib.mjs"
     },
-    "./core": "@primalib/core",
-    "./geo": "@primalib/geo",
-    "./num": "@primalib/num",
-    "./stat": "@primalib/stat",
-    "./lin": "@primalib/lin",
-    "./topo": "@primalib/topo",
-    "./tree": "@primalib/tree"
-  },
-  "dependencies": {
-    "@primalib/core": "file:./core",
-    "@primalib/geo": "file:./geo",
-    "@primalib/num": "file:./num",
-    "@primalib/stat": "file:./stat",
-    "@primalib/lin": "file:./lin",
-    "@primalib/topo": "file:./topo",
-    "@primalib/tree": "file:./tree"
+    "./core": "./core/primaset.mjs",
+    "./geo": "./geo/primageo.mjs",
+    "./num": "./num/primanum.mjs",
+    "./stat": "./stat/primastat.mjs",
+    "./lin": "./lin/primalin.mjs",
+    "./topo": "./topo/primatopo.mjs",
+    "./tree": "./tree/primatree.mjs"
   },
   "scripts": {
     "test": "node primalib.test.mjs",
@@ -92,6 +83,8 @@
     "core/primaset.mjs",
     "core/primaops.mjs",
     "core/errors.mjs",
+    "core/point.mjs",
+    "core/space.mjs",
     "num/primanum.mjs",
     "geo/primageo.mjs",
     "lin/primalin.mjs",
