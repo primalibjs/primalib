@@ -1,7 +1,7 @@
 // point.test.mjs - Tests for unified point architecture
 
 import { test } from '../test/test.mjs'
-import { point, complex, quaternion, octonion, vector } from 'primalib'
+import { point, complex, quaternion, octonion, vector } from './point.mjs'
 
 // ============================================================================
 // BASE POINT

@@ -6,8 +6,8 @@
  */
 
 import { test } from '../test/test.mjs'
-import { primaSet } from 'primalib'
-import { primes } from 'primalib'
+import { primaSet } from './primaset.mjs'
+import { primes } from '../num/primanum.mjs'
 
 test('Memoization: 1M primes forward then backward (second pass must be faster)', ({check, log}) => {
   const Pmemo = primaSet(primes, { memo: true })

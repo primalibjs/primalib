@@ -1,5 +1,5 @@
 import { test } from '../test/test.mjs'
-import { say, on, send, el, client, server, include, primaSet, primalib } from '@primalib/web'
+import { say, on, send, el, client, server, include, primaSet, primalib } from './primaweb.mjs'
 
 // Test say() function
 test('say() - markdown rendering', function ({check}) {

@@ -1,8 +1,8 @@
 // space.test.mjs - Tests for unified Space class
 
 import { test } from '../test/test.mjs'
-import { space, algebraicSpace, complexSpace, quaternionSpace, octonionSpace, ALGEBRAIC_DIMS } from 'primalib'
-import { point, complex, quaternion, octonion } from 'primalib'
+import { space, algebraicSpace, complexSpace, quaternionSpace, octonionSpace, ALGEBRAIC_DIMS } from './space.mjs'
+import { point, complex, quaternion, octonion } from './point.mjs'
 
 // ============================================================================
 // BASIC SPACE CREATION

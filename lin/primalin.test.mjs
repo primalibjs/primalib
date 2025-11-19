@@ -2,7 +2,7 @@
  * Comprehensive tests for PrimaLin - Linear Algebra & Polynomials
  */
 import { test } from '../test/test.mjs'
-import { primaSet } from 'primalib'
+import { primaSet } from '../core/primaset.mjs'
 import {
   vector, dotProduct, crossProduct, normalize, project, angleBetween,
   normL1, normL2, normLinf, vectorSpace,

@@ -1,5 +1,5 @@
 import { test } from '../test/test.mjs'
-import { point, line, rectangle, square, cube } from 'primalib'
+import { point, line, rectangle, square, cube } from './primageo.mjs'
 import { space } from '@primalib/core'
 
 // ---------- Geometry ----------

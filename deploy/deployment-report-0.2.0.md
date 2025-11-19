@@ -1,7 +1,7 @@
 # PrimaLib Deployment Report
 
 **Version:** 0.2.0
-**Date:** 11/19/2025, 4:35:21 PM
+**Date:** 11/19/2025, 4:45:02 PM
 **Status:** ✅ READY
 
 ## Pre-Deployment Checks
@@ -20,14 +20,14 @@
 
 ## Components
 
-- **@primalib/core** (0.2.0): 136.73 KB
+- **@primalib/core** (0.2.0): 136.59 KB
 - **@primalib/geo** (0.2.0): 31.36 KB
-- **@primalib/num** (0.2.0): 45.67 KB
-- **@primalib/stat** (0.2.0): 35.70 KB
-- **@primalib/lin** (0.2.0): 56.50 KB
+- **@primalib/num** (0.2.0): 45.63 KB
+- **@primalib/stat** (0.2.0): 35.69 KB
+- **@primalib/lin** (0.2.0): 56.47 KB
 - **@primalib/topo** (0.2.0): 25.20 KB
-- **@primalib/tree** (0.2.0): 40.72 KB
-- **@primalib/web** (0.2.0): 164.72 KB ⚠️  *experimental*
+- **@primalib/tree** (0.2.0): 40.71 KB
+- **@primalib/web** (0.2.0): 164.71 KB ⚠️  *experimental*
 
 ## Statistics
 
@@ -42,7 +42,7 @@
 
 ### Documentation
 - Files: 59
-- Lines: 22,118
+- Lines: 22,123
 
 ### Bundles
 - Files: 8
@@ -50,4 +50,4 @@
 
 ### Totals
 - Modules: 8
-- Total Lines: 34,892
+- Total Lines: 34,897

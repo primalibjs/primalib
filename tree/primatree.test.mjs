@@ -2,7 +2,7 @@
  * Comprehensive tests for PrimaTree - Tree handling with Virtual DOM foundation
  */
 import { test } from '../test/test.mjs'
-import { primaSet } from 'primalib'
+import { primaSet } from '../core/primaset.mjs'
 import {
   node, tree, treeFromArray, treeFromObject, vdom,
   findNode, walkTree, leaves, descendants, ancestors, siblings

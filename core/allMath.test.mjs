@@ -4,9 +4,9 @@
 
 import { test } from "../test/test.mjs"
 import { primaSet } from "./primaset.mjs"
-import { N, Z, R, primes, address, pipe } from 'primalib'
-import  { range, histogram  } from 'primalib'
-import  { point } from 'primalib'
+import { N, Z, R, primes, address, pipe } from "../num/primanum.mjs"
+import { range, histogram } from '../stat/primastat.mjs'
+import { point } from '../geo/primageo.mjs'
 
 const { PI, E } = Math
 const { sin, cos, tan, asin, acos, atan, atan2, sinh, cosh, tanh,

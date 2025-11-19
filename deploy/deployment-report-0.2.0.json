@@ -1,6 +1,6 @@
 {
   "version": "0.2.0",
-  "timestamp": "2025-11-19T19:35:21.230Z",
+  "timestamp": "2025-11-19T19:45:02.126Z",
   "checks": {
     "versionConsistency": true,
     "tests": {
@@ -37,7 +37,7 @@
       "name": "@primalib/core",
       "version": "0.2.0",
       "path": "core/",
-      "size": "136.73 KB"
+      "size": "136.59 KB"
     },
     {
       "name": "@primalib/geo",
@@ -49,19 +49,19 @@
       "name": "@primalib/num",
       "version": "0.2.0",
       "path": "num/",
-      "size": "45.67 KB"
+      "size": "45.63 KB"
     },
     {
       "name": "@primalib/stat",
       "version": "0.2.0",
       "path": "stat/",
-      "size": "35.70 KB"
+      "size": "35.69 KB"
     },
     {
       "name": "@primalib/lin",
       "version": "0.2.0",
       "path": "lin/",
-      "size": "56.50 KB"
+      "size": "56.47 KB"
     },
     {
       "name": "@primalib/topo",
@@ -73,13 +73,13 @@
       "name": "@primalib/tree",
       "version": "0.2.0",
       "path": "tree/",
-      "size": "40.72 KB"
+      "size": "40.71 KB"
     },
     {
       "name": "@primalib/web",
       "version": "0.2.0",
       "path": "web/",
-      "size": "164.72 KB"
+      "size": "164.71 KB"
     }
   ],
   "statistics": {
@@ -94,14 +94,14 @@
     },
     "documentation": {
       "files": 59,
-      "lines": 22118
+      "lines": 22123
     },
     "bundles": {
       "files": 8,
       "size": "798.21 KB"
     },
     "modules": 8,
-    "totalLines": 34892
+    "totalLines": 34897
   },
   "ready": true
 }

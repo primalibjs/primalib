@@ -1,7 +1,7 @@
 // primaset.test.mjs
 
 import { test } from '../test/test.mjs'
-import { primaSet } from 'primalib'
+import { primaSet } from './primaset.mjs'
 
 // Normalization
 test('🧪 primaset.test.mjs - Normalization - scalar to singleton', ({check}) => {

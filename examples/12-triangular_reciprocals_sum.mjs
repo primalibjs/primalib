@@ -11,7 +11,7 @@
  * As N → ∞, the sum converges to 2
  */
 
-import { N, primaSet } from 'primalib'
+import { N, primaSet } from '../primalib.mjs'
 const { sum } = primaSet
 
 console.log('=== Example 12: Triangular Reciprocals Sum ===\n')
