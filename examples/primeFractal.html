@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Fractal Prime</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
+</head>
+
+<body>
+</body>
+<script>
+  function setup() {
+    createCanvas(400, 400);
+    scale(100);
+  }
+
+  function drawProgression(primes) {
+    // drawProgression(p);
+    let prev = 0
+    for (let i = 0; i < 3; i += 2) {
+      let a = primes[i]
+      let b = primes[i + 1]
+      console.log(a,b,prev)
+      line(prev, 0, prev, a) // 7
+      line(0, a, b, a) // 11
+      prev = b
+    }
+    noLoop();
+  }
+  function primeLine() {
+
+  }
+
+  function draw() {
+    background(0);
+    // push();
+    translate(0, 400);
+    scale(4, -4)
+    // rotate(angle)
+    // stroke(255)
+    // scale(mouseX / 10, mouseY / 100, )
+    // fill('red'); //color string
+    // strokeWeight(0.2);
+    stroke(128)
+
+    const p = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97];
+    drawProgression(p);
+  }
+</script>
+
+</html>

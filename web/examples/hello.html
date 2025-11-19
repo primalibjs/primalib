@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrimaLib Hello</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="content"></div>
+  <script src="dist/primaweb.js"></script>
+  <script>
+    const { say, primalib, loadEnv } = PrimaWeb('#content')
+    const { N, primaSet: ps, primes } = primalib
+    
+    say(`# 🌟 PrimaLib Hello
+## Examples
+**Result 1:** ${ps.sum(ps.sq(N(10)))}
+**Result 2:** ${N(10).sq().sum()}
+**Result 3:** ${JSON.stringify([...primes.take(10)])}
+## Status
+✅ Loaded successfully!
+✅ Protocol: ${window.location.protocol}`)
+  </script>
+</body>
+</html>

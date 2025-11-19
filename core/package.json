@@ -1,0 +1,54 @@
+{
+  "name": "@primalib/core",
+  "version": "0.2.0",
+  "description": "PrimaLib core - lazy set factory and operations",
+  "main": "./primaset.mjs",
+  "types": "./primaset.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./primaset.mjs",
+      "types": "./primaset.d.ts"
+    },
+    "./primaset": {
+      "import": "./primaset.mjs",
+      "types": "./primaset.d.ts"
+    },
+    "./primaops": {
+      "import": "./primaops.mjs"
+    },
+    "./errors": {
+      "import": "./errors.mjs"
+    },
+    "./point": {
+      "import": "./point.mjs"
+    },
+    "./space": {
+      "import": "./space.mjs"
+    }
+  },
+  "keywords": [
+    "lazy",
+    "sets",
+    "functional",
+    "iterable"
+  ],
+  "author": "Anderson Carli <anderson.carli@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/primalibjs/primalib.git",
+    "directory": "core"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "primaset.mjs",
+    "primaops.mjs",
+    "errors.mjs",
+    "point.mjs",
+    "space.mjs"
+  ]
+}
+

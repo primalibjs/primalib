@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrimaLib Tests</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="content"></div>
+  
+  <script src="dist/primaweb.js"></script>
+  <script>
+    const { say, include, primaSet } = PrimaWeb('#content')
+    
+    ;(async () => {
+      say('# 🧪 PrimaLib Tests\n\nRunning tests...')
+      
+      if (window.location.protocol === 'file:') {
+        say('\n\n⚠️ Tests require a server. Use `npm run server` then open `http://localhost:8080/tests.html`')
+        return
+      }
+      
+      try {
+        const { test } = await include('../../primalib/tests/test.mjs', { type: 'code' })
+        
+        const testFiles = primaSet([
+          '../../primalib/tests/primaops.test.mjs',
+          '../../primalib/tests/primaset.test.mjs',
+          '../../primalib/tests/primanum.test.mjs',
+          '../../primalib/tests/primageo.test.mjs',
+          '../../primalib/tests/primastat.test.mjs',
+          '../../primalib/tests/dayToDay.test.mjs',
+          '../../primalib/tests/allMath.test.mjs',
+          '../../primalib/primaenv.test.mjs'
+        ])
+        
+        await Promise.all(testFiles.map(f => include(f, { type: 'code' }).catch(() => {})))
+        
+        const start = performance.now()
+        let results = null
+        
+        await test.run(2, (r) => {
+          results = r
+        })
+        
+        if (!results) {
+          say(`\n\n❌ **Error:** Test runner did not return results`)
+          return
+        }
+        
+        const duration = (performance.now() - start).toFixed(2)
+        const icon = results.fail === 0 ? '✅' : '❌'
+        const status = results.fail === 0 ? 'All tests passed!' : `${results.fail} test(s) failed`
+        
+        const testDetails = primaSet(results.tests)
+          .map(t => `${t.passed ? '✅' : '❌'} ${t.name}${!t.passed && t.error ? ` - ${t.error}` : ''}`)
+          .join('\n')
+        
+        say(`\n\n## Results\n\n${icon} **${status}**\n\n**Summary:** ${results.pass} passed, ${results.fail} failed (${results.coverage.percent}% coverage, ${duration}ms)\n\n## Test Details\n\n\`\`\`\n${testDetails}\n\`\`\``)
+      } catch (e) {
+        say(`\n\n❌ **Error running tests:** ${e.message}\n\n${e.stack || ''}`)
+      }
+    })()
+  </script>
+</body>
+</html>

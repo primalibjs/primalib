@@ -1,0 +1,99 @@
+{
+  "name": "primalib",
+  "version": "0.2.0",
+  "description": "PrimaLib - Complete math library with lazy sets, geometry, number theory, and more",
+  "main": "./primalib.mjs",
+  "module": "./dist/primalib.min.mjs",
+  "browser": "./dist/primalib.min.js",
+  "types": "./primalib.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./primalib.mjs",
+      "require": "./dist/primalib.cjs",
+      "browser": "./dist/primalib.min.js",
+      "types": "./primalib.d.ts",
+      "default": "./primalib.mjs"
+    },
+    "./core": "@primalib/core",
+    "./geo": "@primalib/geo",
+    "./num": "@primalib/num",
+    "./stat": "@primalib/stat",
+    "./lin": "@primalib/lin",
+    "./topo": "@primalib/topo",
+    "./tree": "@primalib/tree"
+  },
+  "dependencies": {
+    "@primalib/core": "^0.2.0",
+    "@primalib/geo": "^0.2.0",
+    "@primalib/num": "^0.2.0",
+    "@primalib/stat": "^0.2.0",
+    "@primalib/lin": "^0.2.0",
+    "@primalib/topo": "^0.2.0",
+    "@primalib/tree": "^0.2.0"
+  },
+  "scripts": {
+    "test": "node primalib.test.mjs",
+    "test:watch": "nodemon primalib.test.mjs",
+    "build": "node build.mjs",
+    "build:browser": "node build.mjs browser",
+    "build:node": "node build.mjs node",
+    "deploy:check": "node deploy/deploy.mjs --dry-run",
+    "deploy:test": "node deploy/deploy.test.mjs",
+    "deploy": "node deploy/deploy.mjs",
+    "prepublishOnly": "npm run build && npm test",
+    "server": "nodemon examples/websocket-server.mjs"
+  },
+  "keywords": [
+    "math",
+    "lazy",
+    "sets",
+    "algebra",
+    "primes",
+    "geometry",
+    "infinite",
+    "functional"
+  ],
+  "author": "Anderson Carli <anderson.carli@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/primalibjs/primalib.git"
+  },
+  "homepage": "https://github.com/primalibjs/primalib#readme",
+  "bugs": {
+    "url": "https://github.com/primalibjs/primalib/issues"
+  },
+  "nodemonConfig": {
+    "events": {
+      "start": "clear || cls"
+    }
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.19.12",
+    "ws": "^8.18.3"
+  },
+  "files": [
+    "primalib.mjs",
+    "primalib.d.ts",
+    "core/primaset.mjs",
+    "core/primaops.mjs",
+    "core/errors.mjs",
+    "num/primanum.mjs",
+    "geo/primageo.mjs",
+    "lin/primalin.mjs",
+    "stat/primastat.mjs",
+    "topo/primatopo.mjs",
+    "tree/primatree.mjs",
+    "web/primaweb.mjs",
+    "web/primaenv.mjs",
+    "web/prima3d.mjs",
+    "dist/",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ]
+}

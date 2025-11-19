@@ -1,0 +1,48 @@
+{
+  "name": "@primalib/web",
+  "version": "0.2.0",
+  "description": "⚠️  EXPERIMENTAL - PrimaLib web module - universal web pipeline (browser & node)",
+  "main": "./primaweb.mjs",
+  "type": "module",
+  "experimental": true,
+  "exports": {
+    ".": {
+      "import": "./primaweb.mjs"
+    },
+    "./primaenv": {
+      "import": "./primaenv.mjs"
+    },
+    "./prima3d": {
+      "import": "./prima3d.mjs"
+    }
+  },
+  "dependencies": {
+    "@primalib/core": "^0.2.0",
+    "primalib": "^0.2.0"
+  },
+  "keywords": [
+    "experimental",
+    "web",
+    "dom",
+    "websocket",
+    "markdown",
+    "browser",
+    "server"
+  ],
+  "author": "Anderson Carli <anderson.carli@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/primalibjs/primalib.git",
+    "directory": "web"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "primaweb.mjs",
+    "primaenv.mjs",
+    "prima3d.mjs"
+  ]
+}
+

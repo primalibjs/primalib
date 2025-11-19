@@ -1,0 +1,35 @@
+{
+  "name": "@primalib/geo",
+  "version": "0.2.0",
+  "description": "PrimaLib geometry module - points, hypercubes, and geometric primitives",
+  "main": "./primageo.mjs",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./primageo.mjs"
+    }
+  },
+  "dependencies": {
+    "@primalib/core": "^0.2.0"
+  },
+  "keywords": [
+    "geometry",
+    "hypercube",
+    "point",
+    "math"
+  ],
+  "author": "Anderson Carli <anderson.carli@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/primalibjs/primalib.git",
+    "directory": "geo"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "primageo.mjs"
+  ]
+}
+

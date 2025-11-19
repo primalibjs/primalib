@@ -1,0 +1,35 @@
+{
+  "name": "@primalib/topo",
+  "version": "0.2.0",
+  "description": "PrimaLib topology module - topological invariants and properties",
+  "main": "./primatopo.mjs",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./primatopo.mjs"
+    }
+  },
+  "dependencies": {
+    "@primalib/core": "^0.2.0",
+    "@primalib/geo": "^0.2.0"
+  },
+  "keywords": [
+    "topology",
+    "math",
+    "geometry"
+  ],
+  "author": "Anderson Carli <anderson.carli@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/primalibjs/primalib.git",
+    "directory": "topo"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "primatopo.mjs"
+  ]
+}
+

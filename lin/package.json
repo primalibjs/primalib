@@ -1,0 +1,37 @@
+{
+  "name": "@primalib/lin",
+  "version": "0.2.0",
+  "description": "PrimaLib linear algebra module - vectors, matrices, and polynomials",
+  "main": "./primalin.mjs",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./primalin.mjs"
+    }
+  },
+  "dependencies": {
+    "@primalib/core": "^0.2.0",
+    "@primalib/geo": "^0.2.0"
+  },
+  "keywords": [
+    "linear-algebra",
+    "vectors",
+    "matrices",
+    "polynomials",
+    "math"
+  ],
+  "author": "Anderson Carli <anderson.carli@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/primalibjs/primalib.git",
+    "directory": "lin"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "primalin.mjs"
+  ]
+}
+

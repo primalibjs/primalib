@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prima3D Viewer - Interactive Geometry Visualization</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow: hidden;
+      background: #000;
+      color: #fff;
+    }
+    #container { width: 100vw; height: 100vh; }
+    #info {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: rgba(0,0,0,0.8);
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 300px;
+      z-index: 100;
+    }
+    h1 { font-size: 24px; margin-bottom: 10px; }
+    p { font-size: 14px; line-height: 1.5; margin: 5px 0; }
+    #controls {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      background: rgba(0,0,0,0.8);
+      padding: 15px;
+      border-radius: 10px;
+      z-index: 100;
+    }
+    button {
+      background: #2196F3;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 5px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:hover { background: #1976D2; }
+    select {
+      background: #333;
+      color: white;
+      border: 1px solid #555;
+      padding: 8px;
+      border-radius: 5px;
+      margin: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  
+  <div id="info">
+    <h1>🎯 Prima3D Viewer</h1>
+    <p><strong>PrimaLib Geometry Visualizer</strong></p>
+    <p>View: <span id="view-type">Hypercube</span></p>
+    <p>Vertices: <span id="vertex-count">8</span></p>
+    <p>Dimensions: <span id="dimensions">3</span></p>
+  </div>
+  
+  <div id="controls">
+    <select id="geometry-select">
+      <option value="hypercube">Hypercube (3D)</option>
+      <option value="hypercube2d">Hypercube (2D - Power of 2)</option>
+      <option value="hypercube4d">Hypercube (4D - Power of 2)</option>
+      <option value="complex">Complex Numbers</option>
+      <option value="quaternion">Quaternions</option>
+      <option value="primes">Prime Cloud</option>
+      <option value="sieve">Prime Sieve Cube (2×3×5)</option>
+    </select>
+    <button id="reset">Reset View</button>
+    <button id="toggle-wireframe">Toggle Wireframe</button>
+  </div>
+
+  <!-- Three.js CDN (latest stable) -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+
+  <!-- PrimaWeb Bundle -->
+  <script src="dist/primaweb.js"></script>
+
+  <!-- Prima3D Module -->
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { visualize, toThreeMesh, createScene } from './prima3d.mjs';
+
+    // Make THREE and OrbitControls globally available for prima3d
+    window.THREE = THREE;
+    window.OrbitControls = OrbitControls;
+
+    // Get PrimaLib from PrimaWeb bundle
+    // PrimaWeb() returns { say, primalib, ... } or PrimaWeb.primalib
+    let primalib;
+    try {
+      // Try multiple access patterns
+      if (PrimaWeb.primalib) {
+        primalib = PrimaWeb.primalib;
+        console.log('✅ PrimaLib accessed via PrimaWeb.primalib');
+      } else {
+        // Create a dummy container for PrimaWeb initialization
+        const dummyDiv = document.createElement('div');
+        dummyDiv.style.display = 'none';
+        document.body.appendChild(dummyDiv);
+        
+        const primaweb = PrimaWeb(dummyDiv);
+        primalib = primaweb.primalib;
+        
+        if (!primalib) {
+          throw new Error('PrimaLib not found in PrimaWeb bundle');
+        }
+        
+        console.log('✅ PrimaLib accessed via PrimaWeb(selector).primalib');
+      }
+      
+      console.log('PrimaLib keys:', Object.keys(primalib).slice(0, 20));
+    } catch (e) {
+      console.error('Failed to load PrimaWeb bundle:', e);
+      // Try direct import as fallback (requires server)
+      try {
+        primalib = await import('../primalib/primalib.mjs');
+        console.log('✅ PrimaLib loaded via direct import');
+      } catch (e2) {
+        console.error('Failed to load PrimaLib:', e2);
+        alert('Failed to load PrimaLib. Please check console for details.');
+        // Early exit - don't continue initialization
+        throw e2;
+      }
+    }
+    
+    const { hypercube, complex, quaternion, primes, address } = primalib;
+    
+    // Check if power2Hypercube and splitPower2 are available
+    const power2Hypercube = primalib.power2Hypercube;
+    const splitPower2 = primalib.splitPower2;
+    
+    // Fallback: create power2Hypercube if not exported
+    const createPower2Hypercube = (dim) => {
+      if (power2Hypercube) return power2Hypercube(dim);
+      // Fallback implementation
+      const corner = new Array(dim).fill(0);
+      const sides = new Array(dim).fill(1);
+      return hypercube(corner, sides);
+    };
+    
+    const createSplitPower2 = (h) => {
+      if (splitPower2) return splitPower2(h);
+      // Fallback: simple even/odd split for 2D
+      if (h.dim === 2) {
+        const verts = h.vertices();
+        return {
+          even: verts.filter(v => (v.coords[0] + v.coords[1]) % 2 === 0),
+          odd: verts.filter(v => (v.coords[0] + v.coords[1]) % 2 === 1)
+        };
+      }
+      // Fallback: mod 4 for 4D
+      if (h.dim === 4) {
+        const verts = h.vertices();
+        const classes = { 0: [], 1: [], 2: [], 3: [] };
+        verts.forEach(v => {
+          const sum = v.coords.reduce((s, c) => s + c, 0);
+          classes[sum % 4].push(v);
+        });
+        return classes;
+      }
+      return {};
+    };
+    
+    if (!hypercube || !complex) {
+      console.error('Missing required functions:', { hypercube, complex, quaternion });
+      alert('PrimaLib functions not available. Check console.');
+      throw new Error('PrimaLib functions not available');
+    }
+
+    // Setup scene
+    let currentMesh = null;
+    let currentScene = null;
+    let currentCamera = null;
+    let currentRenderer = null;
+    let currentControls = null;
+
+    function initScene() {
+      const container = document.getElementById('container');
+      container.innerHTML = ''; // Clear previous
+
+      const { scene, camera, renderer, controls } = createScene({
+        container: container,
+        background: new THREE.Color(0x000000),
+        cameraPos: [5, 5, 5]
+      });
+
+      currentScene = scene;
+      currentCamera = camera;
+      currentRenderer = renderer;
+      currentControls = controls;
+
+      // Add grid helper
+      const gridHelper = new THREE.GridHelper(10, 10, 0x444444, 0x222222);
+      scene.add(gridHelper);
+
+      // Add axes helper
+      const axesHelper = new THREE.AxesHelper(2);
+      scene.add(axesHelper);
+    }
+
+    function visualizeGeometry(type) {
+      if (!currentScene) initScene();
+
+      // Remove previous mesh
+      if (currentMesh) {
+        currentScene.remove(currentMesh);
+      }
+
+      let geometry = null;
+      let mesh = null;
+
+      switch(type) {
+        case 'hypercube':
+          try {
+            geometry = hypercube([0, 0, 0], [1, 1, 1]);
+            console.log('Hypercube created:', geometry);
+            console.log('Vertices:', geometry.vertices ? geometry.vertices() : 'no vertices method');
+            mesh = toThreeMesh(geometry, { 
+              showVertices: true, 
+              showEdges: true, 
+              showFaces: false,
+              vertexColor: 0x00ff00,
+              edgeColor: 0xffffff,
+              vertexSize: 0.15  // Larger vertices
+            });
+            updateInfo('Hypercube (3D)', 8, 3);
+          } catch (e) {
+            console.error('Error creating hypercube:', e);
+            alert('Error: ' + e.message);
+          }
+          break;
+
+        case 'hypercube2d':
+          geometry = createPower2Hypercube(2);
+          const split2d = createSplitPower2(geometry);
+          const verts2d = geometry.vertices();
+          mesh = new THREE.Group();
+          verts2d.forEach((v, i) => {
+            const isEven = split2d.even.includes(v);
+            const pointMesh = toThreeMesh(v, { 
+              size: 0.1, 
+              color: isEven ? 0x00ff00 : 0xff0000 
+            });
+            pointMesh.position.set(v.coords[0] * 2, v.coords[1] * 2, 0);
+            mesh.add(pointMesh);
+          });
+          updateInfo('Hypercube (2D - Power of 2)', verts2d.length, 2);
+          break;
+
+        case 'hypercube4d':
+          geometry = createPower2Hypercube(4);
+          const split4d = createSplitPower2(geometry);
+          const verts4d = geometry.vertices();
+          mesh = new THREE.Group();
+          verts4d.forEach((v, i) => {
+            const mod4 = Object.keys(split4d).find(k => split4d[k].includes(v));
+            const colors = [0xff0000, 0x00ff00, 0x0000ff, 0xffff00];
+            const pointMesh = toThreeMesh(v, { 
+              size: 0.05, 
+              color: colors[mod4] ?? 0xffffff 
+            });
+            // Project 4D to 3D (first 3 coordinates)
+            pointMesh.position.set(v.coords[0] * 0.5, v.coords[1] * 0.5, v.coords[2] * 0.5);
+            mesh.add(pointMesh);
+          });
+          updateInfo('Hypercube (4D - Power of 2)', verts4d.length, 4);
+          break;
+
+        case 'complex':
+          const complexPoints = [];
+          for (let i = 0; i < 20; i++) {
+            const angle = (i / 20) * Math.PI * 2;
+            const z = complex(Math.cos(angle), Math.sin(angle));
+            complexPoints.push(z);
+          }
+          mesh = new THREE.Group();
+          complexPoints.forEach(z => {
+            const m = toThreeMesh(z, { size: 0.1, color: 0x00ffff });
+            mesh.add(m);
+          });
+          updateInfo('Complex Numbers (Unit Circle)', complexPoints.length, 2);
+          break;
+
+        case 'quaternion':
+          const quatPoints = [];
+          for (let i = 0; i < 10; i++) {
+            const q = quaternion(1, i * 0.1, i * 0.1, 0);
+            quatPoints.push(q);
+          }
+          mesh = new THREE.Group();
+          quatPoints.forEach(q => {
+            const m = toThreeMesh(q, { size: 0.1, color: 0x0000ff });
+            mesh.add(m);
+          });
+          updateInfo('Quaternions', quatPoints.length, 4);
+          break;
+
+        case 'primes':
+          const primePoints = [];
+          let count = 0;
+          for (const p of primes) {
+            if (count++ >= 1000) break;  // Increased from 100 to 1000
+            const addr = address(p, 3);
+            const pt = { coords: [addr[0] * 0.5, addr[1] * 0.5, addr[2] * 0.5], type: 'point' };
+            primePoints.push(pt);
+          }
+          mesh = new THREE.Group();
+          primePoints.forEach(pt => {
+            const m = toThreeMesh(pt, { size: 0.08, color: 0xff00ff });  // Larger dots
+            mesh.add(m);
+          });
+          updateInfo('Prime Cloud (CRT Address)', primePoints.length, 3);
+          break;
+
+        case 'sieve':
+          // Prime sieve cube: 2x3x5 dimensions
+          // Show cells for each prime, intersections, and residual space
+          mesh = createPrimeSieveCube();
+          updateInfo('Prime Sieve Cube (2×3×5)', 30, 3);
+          break;
+      }
+
+      if (mesh) {
+        currentMesh = mesh;
+        currentScene.add(mesh);
+        console.log('Mesh added to scene. Children:', mesh.children?.length || 0);
+        console.log('Scene children:', currentScene.children.length);
+      } else {
+        console.warn('No mesh created for type:', type);
+      }
+    }
+
+    function updateInfo(viewType, vertexCount, dimensions) {
+      document.getElementById('view-type').textContent = viewType;
+      document.getElementById('vertex-count').textContent = vertexCount;
+      document.getElementById('dimensions').textContent = dimensions;
+    }
+
+    // Create prime sieve cube visualization
+    function createPrimeSieveCube() {
+      const group = new THREE.Group();
+      const primes = [2, 3, 5];
+      const dims = [2, 3, 5];  // x, y, z dimensions
+      
+      // Colors for each prime
+      const primeColors = {
+        2: 0xff0000,  // Red for 2
+        3: 0x00ff00,  // Green for 3
+        5: 0x0000ff   // Blue for 5
+      };
+      
+      // Intersection colors (blended)
+      const intersectionColors = {
+        '2x3': 0xffff00,  // Yellow (red + green)
+        '2x5': 0xff00ff,  // Magenta (red + blue)
+        '3x5': 0x00ffff,  // Cyan (green + blue)
+        '2x3x5': 0xffffff // White (all three)
+      };
+      
+      const cellSize = 1.0;
+      const spacing = 0.1;
+      const totalSize = cellSize + spacing;
+      
+      // Create cells for each position in 2×3×5 grid
+      // x: 0-1 (2 cells), y: 0-2 (3 cells), z: 0-4 (5 cells)
+      for (let x = 0; x < dims[0]; x++) {
+        for (let y = 0; y < dims[1]; y++) {
+          for (let z = 0; z < dims[2]; z++) {
+            // Address is just [x, y, z] - represents CRT coordinates
+            // Divisible by 2 if x === 0 (mod 2)
+            // Divisible by 3 if y === 0 (mod 3)
+            // Divisible by 5 if z === 0 (mod 5)
+            
+            // Determine cell type
+            const divisibleBy2 = x === 0;  // x=0 means divisible by 2
+            const divisibleBy3 = y === 0;  // y=0 means divisible by 3
+            const divisibleBy5 = z === 0;  // z=0 means divisible by 5
+            
+            const divCount = (divisibleBy2 ? 1 : 0) + (divisibleBy3 ? 1 : 0) + (divisibleBy5 ? 1 : 0);
+            
+            let color, opacity;
+            
+            if (divCount === 0) {
+              // Residual space (not divisible by 2, 3, or 5)
+              color = 0x333333;
+              opacity = 0.3;
+            } else if (divCount === 3) {
+              // Divisible by all three (2×3×5)
+              color = intersectionColors['2x3x5'];
+              opacity = 0.8;
+            } else if (divisibleBy2 && divisibleBy3) {
+              // Divisible by 2×3
+              color = intersectionColors['2x3'];
+              opacity = 0.7;
+            } else if (divisibleBy2 && divisibleBy5) {
+              // Divisible by 2×5
+              color = intersectionColors['2x5'];
+              opacity = 0.7;
+            } else if (divisibleBy3 && divisibleBy5) {
+              // Divisible by 3×5
+              color = intersectionColors['3x5'];
+              opacity = 0.7;
+            } else if (divisibleBy2) {
+              // Divisible by 2 only
+              color = primeColors[2];
+              opacity = 0.5;
+            } else if (divisibleBy3) {
+              // Divisible by 3 only
+              color = primeColors[3];
+              opacity = 0.5;
+            } else if (divisibleBy5) {
+              // Divisible by 5 only
+              color = primeColors[5];
+              opacity = 0.5;
+            }
+            
+            // Create translucent cube
+            const geometry = new THREE.BoxGeometry(cellSize, cellSize, cellSize);
+            const material = new THREE.MeshPhongMaterial({
+              color: color,
+              transparent: true,
+              opacity: opacity,
+              side: THREE.DoubleSide
+            });
+            
+            const cube = new THREE.Mesh(geometry, material);
+            
+            // Position: center the 2×3×5 grid
+            const offsetX = (dims[0] - 1) * totalSize / 2;
+            const offsetY = (dims[1] - 1) * totalSize / 2;
+            const offsetZ = (dims[2] - 1) * totalSize / 2;
+            cube.position.set(
+              x * totalSize - offsetX,
+              y * totalSize - offsetY,
+              z * totalSize - offsetZ
+            );
+            
+            group.add(cube);
+            
+            // Add wireframe edges
+            const edges = new THREE.EdgesGeometry(geometry);
+            const lineMaterial = new THREE.LineBasicMaterial({
+              color: color,
+              opacity: 0.3,
+              transparent: true
+            });
+            const wireframe = new THREE.LineSegments(edges, lineMaterial);
+            wireframe.position.copy(cube.position);
+            group.add(wireframe);
+          }
+        }
+      }
+      
+      return group;
+    }
+
+    // Initialize
+    initScene();
+    visualizeGeometry('hypercube');
+
+    // Controls
+    document.getElementById('geometry-select').addEventListener('change', (e) => {
+      visualizeGeometry(e.target.value);
+    });
+
+    document.getElementById('reset').addEventListener('click', () => {
+      if (currentControls) {
+        currentControls.reset();
+      }
+      if (currentCamera) {
+        currentCamera.position.set(5, 5, 5);
+        currentControls?.update();
+      }
+    });
+
+    document.getElementById('toggle-wireframe').addEventListener('click', () => {
+      if (currentMesh) {
+        currentMesh.traverse((child) => {
+          if (child.material) {
+            child.material.wireframe = !child.material.wireframe;
+          }
+        });
+      }
+    });
+
+    console.log('🎯 Prima3D Viewer loaded!');
+  </script>
+</body>
+</html>
+

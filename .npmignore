@@ -1,0 +1,45 @@
+# Tests
+test/
+tests/
+*.test.mjs
+test*.mjs
+primalib.test.mjs
+
+# Performance benchmarks
+perf/
+*.perf.mjs
+*.bench.mjs
+
+# Build files
+build.mjs
+build/
+.cjs/
+
+# Documentation
+doc/
+old/
+examples/
+
+# Development
+.git/
+.github/
+.gitignore
+.npmignore
+.editorconfig
+.eslintrc*
+.prettierrc*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# CI/CD
+.github/
+
+# Misc
+*.zip
+*.log
+*.tmp
+

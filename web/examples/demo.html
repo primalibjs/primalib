@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrimaWeb Demo - Client-Server Communication</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="content"></div>
+  
+  <script src="dist/primaweb.js"></script>
+  <script>
+    const { say, client, el } = PrimaWeb('#content')
+    
+    say(`# 🌟 PrimaWeb Demo
+
+## Real-Time Client-Server Communication
+
+**Server Time:** <span id="server-time">--</span>
+
+**Mouse Position:** <span id="mouse-pos">--</span>
+
+Move your mouse to see coordinates sent to the server. Watch the server console for updates!`)
+    
+    // Helper functions to get elements (with fallback)
+    const getTimeEl = () => document.getElementById('server-time')
+    const getMouseEl = () => document.getElementById('mouse-pos')
+    
+    // Auto-connect on load (connection is a birth right)
+    const pipe = client('ws://localhost:8080')
+    
+    if (pipe.ws) {
+      pipe.ws.onerror = (error) => {
+        console.error('[CLIENT] WebSocket error:', error)
+        const timeEl = getTimeEl()
+        if (timeEl) timeEl.textContent = 'Connection error'
+      }
+      
+      pipe.ws.onopen = () => {
+        console.log('[CLIENT] ✅ Connected to server')
+      }
+      
+      // Handle server time messages using pipe.on()
+      pipe.on('server-time', (data) => {
+        const timeStr = new Date(data.timestamp).toLocaleTimeString()
+        const timeEl = getTimeEl()
+        if (timeEl) {
+          timeEl.textContent = timeStr
+          console.log(`[Server] Time: ${timeStr}`)
+        } else {
+          console.warn('[CLIENT] server-time element not found')
+        }
+      })
+      
+      // Also listen directly on WebSocket as backup
+      pipe.ws.addEventListener('message', (event) => {
+        try {
+          const data = JSON.parse(event.data)
+          if (data.type === 'server-time') {
+            const timeStr = new Date(data.data.timestamp).toLocaleTimeString()
+            const timeEl = getTimeEl()
+            if (timeEl) {
+              timeEl.textContent = timeStr
+              console.log(`[Server] Time: ${timeStr}`)
+            }
+          }
+        } catch (e) {
+          // Ignore parse errors
+        }
+      })
+    }
+    
+    // Subscribe to mouse move and send to server
+    let lastMouseSend = 0
+    document.addEventListener('mousemove', (e) => {
+      const pos = { x: e.clientX, y: e.clientY }
+      
+      // Always update client display (even if WebSocket not ready)
+      const mouseEl = getMouseEl()
+      if (mouseEl) {
+        mouseEl.textContent = `(${pos.x}, ${pos.y})`
+      }
+      
+      // Send to server if WebSocket is ready
+      if (pipe?.ws?.readyState === 1) {
+        const now = Date.now()
+        if (now - lastMouseSend > 50) {
+          pipe.send('mousemove', pos)
+          lastMouseSend = now
+        }
+      }
+    })
+    
+    // Auto-disconnect on page unload
+    window.addEventListener('beforeunload', () => {
+      if (pipe?.ws) pipe.ws.close()
+    })
+  </script>
+</body>
+</html>

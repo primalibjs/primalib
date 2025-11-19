@@ -1,0 +1,36 @@
+{
+  "name": "@primalib/num",
+  "version": "0.2.0",
+  "description": "PrimaLib number theory module - primes, sequences, and number operations",
+  "main": "./primanum.mjs",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./primanum.mjs"
+    }
+  },
+  "dependencies": {
+    "@primalib/core": "^0.2.0",
+    "@primalib/geo": "^0.2.0"
+  },
+  "keywords": [
+    "primes",
+    "number-theory",
+    "sequences",
+    "math"
+  ],
+  "author": "Anderson Carli <anderson.carli@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/primalibjs/primalib.git",
+    "directory": "num"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "primanum.mjs"
+  ]
+}
+
