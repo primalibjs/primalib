@@ -1,5 +1,5 @@
-import { geometricSieve, isPrimeGeometric } from '../primanum.mjs';
-import { operations } from '../primaops.mjs';
+import { geometricSieve, isPrimeGeometric } from 'primalib';
+import { operations } from 'primalib';
 
 const firstDivisor = operations.firstDivisor;
 const isPrime = operations.isPrime;

@@ -2,9 +2,9 @@
  * Comprehensive tests for functional calling styles
  */
 import { test } from '../test/test.mjs';  // Assume ESM test harness with check(actual, expected)
-import { primaSet } from './primaset.mjs';
+import { primaSet } from 'primalib';
 
-import { N, Z, R, primes } from '../num/primanum.mjs';
+import { N, Z, R, primes } from 'primalib';
 
 // Destructure operations from primaSet
 const { sq, sqrt, add, mul, sum, min, max, mean, clamp, sigmoid, factorial, lcm, firstDivisor } = primaSet;

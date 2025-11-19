@@ -1,6 +1,6 @@
 {
   "version": "0.2.0",
-  "timestamp": "2025-11-19T19:28:38.005Z",
+  "timestamp": "2025-11-19T19:35:21.230Z",
   "checks": {
     "versionConsistency": true,
     "tests": {
@@ -10,25 +10,25 @@
     },
     "build": true,
     "git": {
-      "clean": false,
-      "changes": 5
+      "clean": true,
+      "changes": 0
     },
     "npmAuth": true
   },
   "bundles": [
     {
       "name": "primalib.cjs",
-      "size": "51.32 KB",
+      "size": "49.46 KB",
       "path": "dist/primalib.cjs"
     },
     {
       "name": "primalib.min.js",
-      "size": "49.66 KB",
+      "size": "47.95 KB",
       "path": "dist/primalib.min.js"
     },
     {
       "name": "primalib.min.mjs",
-      "size": "49.14 KB",
+      "size": "47.45 KB",
       "path": "dist/primalib.min.mjs"
     }
   ],
@@ -37,19 +37,19 @@
       "name": "@primalib/core",
       "version": "0.2.0",
       "path": "core/",
-      "size": "137.08 KB"
+      "size": "136.73 KB"
     },
     {
       "name": "@primalib/geo",
       "version": "0.2.0",
       "path": "geo/",
-      "size": "31.46 KB"
+      "size": "31.36 KB"
     },
     {
       "name": "@primalib/num",
       "version": "0.2.0",
       "path": "num/",
-      "size": "47.96 KB"
+      "size": "45.67 KB"
     },
     {
       "name": "@primalib/stat",
@@ -61,13 +61,13 @@
       "name": "@primalib/lin",
       "version": "0.2.0",
       "path": "lin/",
-      "size": "56.59 KB"
+      "size": "56.50 KB"
     },
     {
       "name": "@primalib/topo",
       "version": "0.2.0",
       "path": "topo/",
-      "size": "25.58 KB"
+      "size": "25.20 KB"
     },
     {
       "name": "@primalib/tree",
@@ -85,8 +85,8 @@
   "statistics": {
     "code": {
       "files": 37,
-      "lines": 8606,
-      "size": "1999 KB"
+      "lines": 8502,
+      "size": "1968 KB"
     },
     "tests": {
       "files": 20,
@@ -94,14 +94,14 @@
     },
     "documentation": {
       "files": 59,
-      "lines": 22126
+      "lines": 22118
     },
     "bundles": {
       "files": 8,
-      "size": "821.26 KB"
+      "size": "798.21 KB"
     },
     "modules": 8,
-    "totalLines": 35004
+    "totalLines": 34892
   },
   "ready": true
 }

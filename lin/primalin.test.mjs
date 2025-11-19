@@ -2,7 +2,7 @@
  * Comprehensive tests for PrimaLin - Linear Algebra & Polynomials
  */
 import { test } from '../test/test.mjs'
-import { primaSet } from '../core/primaset.mjs'
+import { primaSet } from 'primalib'
 import {
   vector, dotProduct, crossProduct, normalize, project, angleBetween,
   normL1, normL2, normLinf, vectorSpace,
@@ -14,7 +14,7 @@ import {
   addPolynomials, subtractPolynomials, multiplyPolynomials, dividePolynomials,
   composePolynomials, findRoots, polynomialSequence
 } from './primalin.mjs'
-import { point } from '../geo/primageo.mjs'
+import { point } from 'primalib'
 
 // ============================================================================
 // VECTORS - Extending point from primageo

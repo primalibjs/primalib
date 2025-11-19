@@ -1,7 +1,7 @@
 // primaset.test.mjs
 
-import { test } from '../test/test.mjs';  // Assume ESM test harness with check(actual, expected)
-import { primaSet } from './primaset.mjs';
+import { test } from '../test/test.mjs'
+import { primaSet } from 'primalib'
 
 // Normalization
 test('🧪 primaset.test.mjs - Normalization - scalar to singleton', ({check}) => {

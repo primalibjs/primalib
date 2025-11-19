@@ -5,10 +5,10 @@
 */
 
 import { test } from "../test/test.mjs"
-import { primaSet } from "../core/primaset.mjs"
-import { N, Z, R, primes, address } from "./primanum.mjs"
-import { pipe } from "../core/primaset.mjs"
-import { point } from "../geo/primageo.mjs"
+import { primaSet } from 'primalib'
+import { N, Z, R, primes, address } from 'primalib'
+import { pipe } from 'primalib'
+import { point } from 'primalib'
 const { sq, sqrt, inv, ln, abs, neg, add, sub, mul, div, scale, shift, mean, min, max, sum, take, gcd, mod } = primaSet
 
 // ------ N Natural Numbers ---------
