@@ -4,7 +4,7 @@
  * Working with geometric objects
  */
 
-import { point, hypercube } from '../primalib.mjs'
+import { point, space } from 'primalib'
 
 console.log('=== Example 3: Geometry ===\n')
 
@@ -18,13 +18,13 @@ console.log(p1.add(p2).coords)  // → [4, 6]
 console.log('\nDistance from origin (3, 4):')
 console.log(point(3, 4).norm())  // → "5"
 
-// Hypercube vertices
+// Space vertices
 console.log('\nUnit square vertices:')
-const square = hypercube([0, 0], [1, 1])
+const square = space([0, 0], [1, 1])
 console.log(square.vertices().length)  // → 4
 
 // Unit cube vertices
 console.log('\nUnit cube vertices:')
-const cube = hypercube([0, 0, 0], [1, 1, 1])
+const cube = space([0, 0, 0], [1, 1, 1])
 console.log(cube.vertices().length)  // → 8
 

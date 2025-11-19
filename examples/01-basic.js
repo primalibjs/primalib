@@ -4,8 +4,7 @@
  * Simple examples showing PrimaLib's core features
  */
 
-import { N, pipe } from '../primalib.mjs'
-import { primaSet } from '../primaset.mjs'
+import { N, pipe, primaSet } from 'primalib'
 const { sq, sum, take } = primaSet
 
 console.log('=== Example 1: Basic Usage ===\n')

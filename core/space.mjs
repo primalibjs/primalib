@@ -207,29 +207,4 @@ const space = (corner, sides) => {
 // CONVENIENCE FACTORIES
 // ============================================================================
 
-/**
- * Create an algebraic space (power-of-2 dimension)
- * @param {number} dim - Dimension (must be 2, 4, or 8)
- */
-const algebraicSpace = (dim) => {
-  if (!ALGEBRAIC_DIMS.includes(dim)) {
-    throw new Error(
-      `Algebraic spaces only exist in dimensions 2, 4, 8. Got ${dim}D. ` +
-      `This is why we don't have 3D numbers (Frobenius theorem).`
-    )
-  }
-  return space(new Array(dim).fill(0), new Array(dim).fill(1))
-}
-
-const complexSpace = () => algebraicSpace(2)
-const quaternionSpace = () => algebraicSpace(4)
-const octonionSpace = () => algebraicSpace(8)
-
-export {
-  space,
-  algebraicSpace,
-  complexSpace,
-  quaternionSpace,
-  octonionSpace,
-  ALGEBRAIC_DIMS
-}
+export { space, ALGEBRAIC_DIMS }

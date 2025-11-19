@@ -166,20 +166,20 @@ geometricSieve(100)  // → Primes up to 100 using geometric methods
 **Module**: `primageo.mjs`  
 **Documentation**: [PRIMAGEO.md](./PRIMAGEO.md)
 
-PrimaGeo provides geometric structures in n-dimensional space, including points, hypercubes, hyperplanes, and conversions between number systems (complex, quaternion, octonion).
+PrimaGeo provides geometric structures in n-dimensional space, including points, spaces, planes, and conversions between number systems (complex, quaternion, octonion).
 
 ### Key Features
 
 - **Points**: n-dimensional points with vector operations
-- **Hypercubes**: n-dimensional hypercubes with vertex enumeration and sampling
-- **Hyperplanes**: n-dimensional hyperplanes with distance calculations
+- **Hypercubes**: n-dimensional spaces with vertex enumeration and sampling
+- **Hyperplanes**: n-dimensional planes with distance calculations
 - **Number system conversions**: Complex, quaternion, octonion representations
 - **Geometric operations**: Distance, norm, scaling, addition, subtraction
 
 ### Quick Example
 
 ```javascript
-import { point, hypercube, hyperplane } from 'primalib'
+import { point, space, plane } from 'primalib'
 
 // Points in n-dimensional space
 const p1 = point(1, 2, 3)
@@ -188,12 +188,12 @@ p1.add(p2)  // → point(5, 7, 9)
 p1.norm()   // → 3.741... (Euclidean distance)
 
 // Hypercubes
-const cube = hypercube([0,0,0], [1,1,1])
+const cube = space([0,0,0], [1,1,1])
 cube.vertices()  // → 8 corner points
 cube.sample(10)  // → 10 interior points
 
 // Hyperplanes
-const plane = hyperplane([1,1,1], 5)  // Normal [1,1,1], distance 5
+const plane = plane([1,1,1], 5)  // Normal [1,1,1], distance 5
 plane.distance(point(1,1,1))  // → Distance from point to plane
 ```
 
@@ -398,20 +398,20 @@ Prima3D provides visualization capabilities for PrimaLib geometries using Three.
 - **Geometry conversion**: Convert PrimaLib geometries to Three.js meshes
 - **Scene management**: Create and manage Three.js scenes with cameras and lights
 - **PrimaSet integration**: Visualize sets of geometries as groups
-- **Multiple geometry types**: Points, hypercubes, hyperplanes, complex numbers, quaternions, octonions
+- **Multiple geometry types**: Points, spaces, planes, complex numbers, quaternions, octonions
 - **Standalone**: Works with Three.js CDN, no build step required
 
 ### Quick Example
 
 ```javascript
 import { visualize } from 'primalib/prima3d.mjs'
-import { point, hypercube } from 'primalib'
+import { point, space } from 'primalib'
 
 // Visualize point
 visualize(point(1, 2, 3), { container: '#canvas' })
 
-// Visualize hypercube
-visualize(hypercube([0,0,0], [1,1,1]), {
+// Visualize space
+visualize(space([0,0,0], [1,1,1]), {
   container: '#canvas',
   showVertices: true,
   showEdges: true
@@ -465,7 +465,7 @@ primaSet([1,2,3]).map(x => x * 2)  // → [2,4,6]
 import { N, primes, twins, address } from 'primalib'
 
 // Geometry
-import { point, hypercube, hyperplane } from 'primalib'
+import { point, space, plane } from 'primalib'
 
 // Linear algebra
 import { vector, matrix, polynomial } from 'primalib'
@@ -529,8 +529,8 @@ Add your own operations through plugins:
 ### Geometry (PrimaGeo)
 
 - **Points**: `point(...coords)`, `point.add()`, `point.scale()`, `point.norm()`
-- **Hypercubes**: `hypercube(corner, sides)`, `hypercube.vertices()`, `hypercube.sample()`
-- **Hyperplanes**: `hyperplane(normal, distance)`, `hyperplane.distance()`
+- **Hypercubes**: `space(corner, sides)`, `space.vertices()`, `space.sample()`
+- **Hyperplanes**: `plane(normal, distance)`, `plane.distance()`
 
 ### Statistics (PrimaStat)
 
@@ -585,10 +585,10 @@ primes.take(10).map(p => address(p))
 ### Example 2: Geometric Visualization
 
 ```javascript
-import { hypercube, point, vector } from 'primalib'
+import { space, point, vector } from 'primalib'
 
 // 3D cube
-const cube = hypercube([0,0,0], [1,1,1])
+const cube = space([0,0,0], [1,1,1])
 const vertices = cube.vertices()
 
 // Convert to vectors
@@ -671,9 +671,9 @@ say(`# Sum of Squares\n\n${sum(sq(N(10)))}`)
 
 ### Intermediate
 
-4. **Geometry**: Work with points and hypercubes
+4. **Geometry**: Work with points and spaces
    - Read [PRIMAGEO.md](./PRIMAGEO.md)
-   - Try: `point(1,2).add(point(3,4))`, `hypercube([0,0], [1,1])`
+   - Try: `point(1,2).add(point(3,4))`, `space([0,0], [1,1])`
 
 5. **Statistics**: Analyze data
    - Read [PRIMASTAT.md](./PRIMASTAT.md)

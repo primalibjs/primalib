@@ -6,7 +6,7 @@
  * 10-fold increases, restarting on each test.
  */
 
-import { primes, primaSet } from '../primalib.mjs'
+import { primes, primaSet } from 'primalib'
 
 console.log('🌟 PrimaSet: Memoization Performance\n')
 

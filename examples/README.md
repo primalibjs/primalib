@@ -54,7 +54,7 @@ node examples/02-primes.js
 ---
 
 #### [03-geometry.js](./03-geometry.js)
-**Geometry** - Working with points and hypercubes
+**Geometry** - Working with points and spaces
 
 **What you'll learn:**
 - Creating and manipulating points
@@ -71,8 +71,8 @@ node examples/03-geometry.js
 - `point()` - Creating points
 - `point.add()` - Vector addition
 - `point.norm()` - Euclidean distance
-- `hypercube()` - Creating hypercubes
-- `hypercube.vertices()` - Getting corners
+- `space()` - Creating spaces
+- `space.vertices()` - Getting corners
 
 ---
 
@@ -324,13 +324,13 @@ console.log(pipeline())  // → 385
 ### Pattern 4: Geometry
 
 ```javascript
-import { point, hypercube } from 'primalib'
+import { point, space } from 'primalib'
 
 const p1 = point(1, 2)
 const p2 = point(3, 4)
 console.log(p1.add(p2).coords)  // → [4, 6]
 
-const cube = hypercube([0,0,0], [1,1,1])
+const cube = space([0,0,0], [1,1,1])
 console.log(cube.vertices().length)  // → 8
 ```
 

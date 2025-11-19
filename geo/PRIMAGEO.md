@@ -4,7 +4,7 @@
 
 PrimaGeo provides geometric primitives for n-dimensional space, including points, spaces (geometric and algebraic), and power-of-2 algebras (complex, quaternion, octonion). All structures support lazy evaluation and integrate seamlessly with PrimaSet.
 
-> 📖 **See also**: [SPACE.md](./SPACE.md) for detailed information about Space as hyperplanes, the `isAlgebraic` property, and the Frobenius Theorem.
+> 📖 **See also**: [SPACE.md](./SPACE.md) for detailed information about Space as planes, the `isAlgebraic` property, and the Frobenius Theorem.
 
 ## 🎯 **Architecture**
 
@@ -12,7 +12,7 @@ PrimaGeo provides geometric primitives for n-dimensional space, including points
   - Geometric by default (any dimension)
   - Algebraic when power-of-2 (2D, 4D, 8D) - where division algebras live
   - Direct relation with Point: `space.point()` creates the right type
-  - See [SPACE.md](./SPACE.md) for details about Space as hyperplanes and the Frobenius Theorem
+  - See [SPACE.md](./SPACE.md) for details about Space as planes and the Frobenius Theorem
 - **Points**: n-dimensional points with numeric indexing and destructuring support
   - Unified hierarchy: `point` → `complex` → `quaternion` → `octonion`
 - **Complex Numbers**: Full algebraic operations (multiplication, division, exponentiation)
@@ -427,10 +427,10 @@ Hyperplanes for geometric projections and distance calculations.
 ### Creation
 
 ```javascript
-import { hyperplane, plane } from 'primalib'
+import { plane, plane } from 'primalib'
 
-// Create hyperplane: origin + normal vector
-const hp = hyperplane([0, 0, 0], [1, 0, 0])  // Plane through origin, normal to x-axis
+// Create plane: origin + normal vector
+const hp = plane([0, 0, 0], [1, 0, 0])  // Plane through origin, normal to x-axis
 
 // Ergonomic helper for 3D planes
 const p = plane([1, 1, 1], 0)  // Plane with normal [1,1,1], offset 0
@@ -439,29 +439,29 @@ const p = plane([1, 1, 1], 0)  // Plane with normal [1,1,1], offset 0
 ### Projection
 
 ```javascript
-const hp = hyperplane([0, 0, 0], [1, 0, 0])
+const hp = plane([0, 0, 0], [1, 0, 0])
 const pt = point(5, 3, 2)
 
-// Project point onto hyperplane
+// Project point onto plane
 hp.project(pt)  // → point projected onto plane
 ```
 
 ### Distance
 
 ```javascript
-const hp = hyperplane([0, 0, 0], [1, 0, 0])
+const hp = plane([0, 0, 0], [1, 0, 0])
 const pt = point(5, 3, 2)
 
-// Distance from point to hyperplane
+// Distance from point to plane
 hp.distance(pt)  // → 5 (distance along normal)
 ```
 
 ### Sampling
 
 ```javascript
-const hp = hyperplane([0, 0, 0], [1, 0, 0])
+const hp = plane([0, 0, 0], [1, 0, 0])
 
-// Sample points on hyperplane (lazy)
+// Sample points on plane (lazy)
 hp.sample([-1, 1, -1, 1], 5)  // → primaSet of points on plane
 ```
 
@@ -470,10 +470,10 @@ hp.sample([-1, 1, -1, 1], 5)  // → primaSet of points on plane
 ```javascript
 import { slice, space } from '@primalib/core'
 
-// Slice space with hyperplane
+// Slice space with plane
 const s = space([0,0,0], [1,1,1])
-const hp = hyperplane([0.5, 0, 0], [1, 0, 0])
-slice(s, hp)  // → points near the hyperplane
+const hp = plane([0.5, 0, 0], [1, 0, 0])
+slice(s, hp)  // → points near the plane
 ```
 
 ## 🔧 **Power-of-2 Helpers**
@@ -577,7 +577,7 @@ C.split()  // → {even: [...], odd: [...]}
 
 | Function | Description | Example |
 |----------|-------------|---------|
-| `hyperplane(origin, normal)` | Create hyperplane | `hyperplane([0,0,0], [1,0,0])` |
+| `plane(origin, normal)` | Create plane | `plane([0,0,0], [1,0,0])` |
 | `plane(normal, offset)` | 3D plane helper | `plane([1,1,1], 0)` |
 | `hp.project(p)` | Project point | `hp.project(p)` |
 | `hp.distance(p)` | Distance to point | `hp.distance(p)` |
@@ -677,10 +677,10 @@ q.toRotationMatrix()  // → 3×3 rotation matrix
 ### Example 5: Hyperplanes
 
 ```javascript
-import { hyperplane, point } from 'primalib'
+import { plane, point } from 'primalib'
 
 // Plane through origin, normal to x-axis
-const hp = hyperplane([0, 0, 0], [1, 0, 0])
+const hp = plane([0, 0, 0], [1, 0, 0])
 
 const pt = point(5, 3, 2)
 hp.distance(pt)    // → 5

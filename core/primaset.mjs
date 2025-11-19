@@ -636,9 +636,8 @@ if (primaSet.pipe !== pipeBackup) {
 export { primaSet, operations, methods, generators }
 // Export pipe as standalone function
 export const pipe = primaSet.pipe
-
 // Export point structures (unified architecture)
 export { point, complex, quaternion, octonion, vector } from './point.mjs'
 
 // Export space (unified geometric and algebraic space)
-export { space, algebraicSpace, complexSpace, quaternionSpace, octonionSpace, ALGEBRAIC_DIMS } from './space.mjs'
+export { space } from './space.mjs'

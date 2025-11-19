@@ -4,9 +4,7 @@
  * Architecture: Extends primageo.point, uses primaset for lazy operations
  */
 
-import { primaSet } from '@primalib/core'
-import { point } from '@primalib/geo'
-import { vector } from '@primalib/core'
+import { primaSet, point, vector } from '@primalib/core'
 
 // ============================================================================
 // VECTORS - Using vector from point.mjs (already extends point)

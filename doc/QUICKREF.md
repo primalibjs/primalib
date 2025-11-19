@@ -45,7 +45,8 @@ primes                       // Infinite primes
 
 ```javascript
 sq(x)                        // Square
-sqrt(x)                      // Square root
+inv(x)                       // Inverse (1/x)
+neg(x)                       // Negate (-x)
 add(a, b)                    // Addition
 mul(a, b)                    // Multiplication
 sum(arr)                     // Sum all
@@ -95,8 +96,8 @@ point(1, 2, 3)              // Create point
 point(1,2).add(point(3,4))  // → point(4,6)
 point(3,4).norm()           // → 5
 
-hypercube([0,0], [1,1])     // 2D square
-hypercube([0,0,0], [1,1,1]) // 3D cube
+space([0,0], [1,1])         // 2D square
+space([0,0,0], [1,1,1])     // 3D cube
 ```
 
 ## 🔢 **Vectors & Matrices**
@@ -207,7 +208,7 @@ primaSet(data).map(fn).filter(pred).take(n)
 
 ```javascript
 point(x, y, z)              // Points
-hypercube(corner, sides)    // Hypercubes
+space(corner, sides)        // Geometric/algebraic spaces
 ```
 
 ### Linear Algebra
@@ -231,7 +232,8 @@ correlation(x, y)           // Correlation
 | Operation | Syntax | Example |
 |-----------|--------|---------|
 | Square | `sq(x)` | `sq(5)` → `25` |
-| Square root | `sqrt(x)` | `sqrt(9)` → `3` |
+| Inverse | `inv(x)` | `inv(2)` → `0.5` |
+| Negate | `neg(x)` | `neg(5)` → `-5` |
 | Sum | `sum(arr)` | `sum([1,2,3])` → `6` |
 | Mean | `mean(arr)` | `mean([1,2,3])` → `2` |
 | Take | `take(n)` | `N().take(5)` → `[1,2,3,4,5]` |
@@ -269,7 +271,7 @@ import { primaSet, N, primes } from 'primalib'
 import { sq, sum, mean } from 'primalib'
 
 // Geometry
-import { point, hypercube } from 'primalib'
+import { point, space } from 'primalib'
 
 // Linear Algebra
 import { vector, matrix, polynomial } from 'primalib'

@@ -168,7 +168,7 @@ PrimaLib invites experimentation—extend it, break it, rebuild it. It's not jus
 ---
 
 ```js
-import { N, R, sq, sum, pipe, point, hypercube, address, primes } from 'primalib'
+import { N, R, sq, sum, pipe, point, space, address, primes } from 'primalib'
 
 pipe(N, take(10), sq, sum)()          // → 385
 N(10).sq().sum()                      // → 385
@@ -210,7 +210,7 @@ npm install primalib
 ```
 
 ```js
-import { N, Z, R, primes, point, hypercube, pipe } from 'primalib'
+import { N, Z, R, primes, point, space, pipe } from 'primalib'
 ```
 
 ---
@@ -300,16 +300,16 @@ point(1,2).add(point(3,4)) → point(4,6)
 point(3,4).norm() → 5
 ```
 
-### `hypercube(corner, sides)`
+### `space(corner, sides)`
 ```js
-hypercube([0,0], [1,1])       // unit square
+space([0,0], [1,1])       // unit square
   .vertices()                 // → 4 corner points
   .sample(2)                  // → 3×3 grid = 9 points
 ```
 
 #### Primal Cell Division
 ```js
-hypercube([0,0,0],[2,3,5])
+space([0,0,0],[2,3,5])
   .subdivide(0, 2)           // split x-axis into 2
   .take(1)                    // first half-cube
   .sample(1)[0].coords        // → [1, 0, 0]

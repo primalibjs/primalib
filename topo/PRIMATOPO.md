@@ -18,17 +18,17 @@ PrimaTopo provides topological analysis tools for geometric structures, includin
 
 ```javascript
 import { genus } from 'primalib'
-import { hypercube } from 'primalib'
+import { space } from 'primalib'
 
 // Genus of geometric structures
-const h = hypercube([0, 0], [1, 1])
-h.type = 'hypercube'
+const h = space([0, 0], [1, 1])
+h.type = 'space'
 genus(h)  // → 0
 
 // Supported types
 genus({type: 'sphere'})   // → 0
 genus({type: 'torus'})    // → 1
-genus({type: 'hypercube'}) // → 0
+genus({type: 'space'}) // → 0
 genus({type: 'klein'})    // → 0
 genus({type: 'mobius'})   // → 0
 genus({type: 'cylinder'}) // → 0
@@ -39,16 +39,16 @@ genus({type: 'plane'})    // → 0
 
 ```javascript
 import { eulerCharacteristic } from 'primalib'
-import { hypercube } from 'primalib'
+import { space } from 'primalib'
 
-// Euler characteristic of hypercube
-const h2 = hypercube([0, 0], [1, 1])
-h2.type = 'hypercube'
+// Euler characteristic of space
+const h2 = space([0, 0], [1, 1])
+h2.type = 'space'
 h2.dim = 2
 eulerCharacteristic(h2)  // → 4 (2D square: vertices - edges + faces)
 
-const h3 = hypercube([0, 0, 0], [1, 1, 1])
-h3.type = 'hypercube'
+const h3 = space([0, 0, 0], [1, 1, 1])
+h3.type = 'space'
 h3.dim = 3
 eulerCharacteristic(h3)  // → 1 (3D cube: V - E + F - C = 8 - 12 + 6 - 1)
 
@@ -66,7 +66,7 @@ import { isOrientable } from 'primalib'
 // Check if geometry is orientable
 isOrientable({type: 'sphere'})   // → true
 isOrientable({type: 'torus'})    // → true
-isOrientable({type: 'hypercube'}) // → true
+isOrientable({type: 'space'}) // → true
 isOrientable({type: 'mobius'})   // → false (Möbius strip)
 isOrientable({type: 'klein'})    // → false (Klein bottle)
 ```
@@ -77,7 +77,7 @@ isOrientable({type: 'klein'})    // → false (Klein bottle)
 import { isCompact } from 'primalib'
 
 // Check if geometry is compact
-isCompact({type: 'hypercube'}) // → true
+isCompact({type: 'space'}) // → true
 isCompact({type: 'sphere'})    // → true
 isCompact({type: 'torus'})     // → true
 isCompact({type: 'klein'})    // → true
@@ -93,7 +93,7 @@ import { isConnected } from 'primalib'
 // Check if geometry is connected
 isConnected({type: 'sphere'})   // → true
 isConnected({type: 'torus'})   // → true
-isConnected({type: 'hypercube'}) // → true
+isConnected({type: 'space'}) // → true
 isConnected({type: 'disjoint'}) // → false
 ```
 
@@ -105,7 +105,7 @@ import { isSimplyConnected } from 'primalib'
 // Check if geometry is simply connected
 // (genus 0, orientable, and connected)
 isSimplyConnected({type: 'sphere'})   // → true
-isSimplyConnected({type: 'hypercube'}) // → true
+isSimplyConnected({type: 'space'}) // → true
 isSimplyConnected({type: 'torus'})    // → false (genus 1)
 isSimplyConnected({type: 'klein'})    // → false (non-orientable)
 ```
@@ -117,11 +117,11 @@ Fiber bundles are topological structures that locally look like a product space.
 ### Creating Fiber Bundles
 
 ```javascript
-import { fiberBundle, hypercube, point } from 'primalib'
+import { fiberBundle, space, point } from 'primalib'
 
 // Create fiber bundle: base × fiber with projection
-const base = hypercube([0, 0], [1, 1])  // 2D base
-const fiber = hypercube([0], [1])       // 1D fiber
+const base = space([0, 0], [1, 1])  // 2D base
+const fiber = space([0], [1])       // 1D fiber
 
 const projection = (p) => {
   // Project total space point to base
@@ -175,18 +175,18 @@ lifted.toArray()
 ### Hypercube as Fiber Bundle
 
 ```javascript
-import { hypercubeAsFiberBundle } from 'primalib'
+import { spaceAsFiberBundle } from 'primalib'
 
-// Decompose hypercube as fiber bundle
-const bundle = hypercubeAsFiberBundle(4)  // 4D hypercube
+// Decompose space as fiber bundle
+const bundle = spaceAsFiberBundle(4)  // 4D space
 
-bundle.base   // → 2D hypercube (base)
-bundle.fiber  // → 2D hypercube (fiber)
+bundle.base   // → 2D space (base)
+bundle.fiber  // → 2D space (fiber)
 bundle.projection  // → projection function
 
-// Total space is 4D hypercube
+// Total space is 4D space
 const total = bundle.totalSpace()
-total.toArray()  // → All vertices of 4D hypercube
+total.toArray()  // → All vertices of 4D space
 ```
 
 ## ✖️ **Cartesian Products**
@@ -196,11 +196,11 @@ Cartesian products combine geometric structures.
 ### Cartesian Product
 
 ```javascript
-import { cartesianProduct, hypercube, point } from 'primalib'
+import { cartesianProduct, space, point } from 'primalib'
 
-// Product of two hypercubes
-const h1 = hypercube([0], [1])  // 1D
-const h2 = hypercube([0, 0], [1, 1])  // 2D
+// Product of two spaces
+const h1 = space([0], [1])  // 1D
+const h2 = space([0, 0], [1, 1])  // 2D
 
 const product = cartesianProduct(h1, h2)
 product.toArray()
@@ -221,11 +221,11 @@ Betti numbers are topological invariants representing the rank of homology group
 ### Betti Numbers
 
 ```javascript
-import { bettiNumbers, hypercube } from 'primalib'
+import { bettiNumbers, space } from 'primalib'
 
-// Betti numbers of hypercube
-const h3 = hypercube([0, 0, 0], [1, 1, 1])
-h3.type = 'hypercube'
+// Betti numbers of space
+const h3 = space([0, 0, 0], [1, 1, 1])
+h3.type = 'space'
 h3.dim = 3
 bettiNumbers(h3)  // → [1, 0, 0, 1] (b₀=1, b₁=0, b₂=0, b₃=1)
 
@@ -244,10 +244,10 @@ Comprehensive analysis of all topological properties.
 ### Topological Invariants
 
 ```javascript
-import { topologicalInvariants, hypercube } from 'primalib'
+import { topologicalInvariants, space } from 'primalib'
 
-const h = hypercube([0, 0, 0], [1, 1, 1])
-h.type = 'hypercube'
+const h = space([0, 0, 0], [1, 1, 1])
+h.type = 'space'
 h.dim = 3
 
 const invariants = topologicalInvariants(h)
@@ -283,7 +283,7 @@ const invariants = topologicalInvariants(h)
 | `bundle.totalSpace()` | Get total space | `bundle.totalSpace()` |
 | `bundle.section(sectionMap)` | Create section | `bundle.section(map)` |
 | `bundle.lift(path)` | Lift path | `bundle.lift(path)` |
-| `hypercubeAsFiberBundle(dim)` | Hypercube as bundle | `hypercubeAsFiberBundle(4)` |
+| `spaceAsFiberBundle(dim)` | Hypercube as bundle | `spaceAsFiberBundle(4)` |
 
 ### Products
 
@@ -309,10 +309,10 @@ const invariants = topologicalInvariants(h)
 
 ```javascript
 import { genus, eulerCharacteristic, isOrientable } from 'primalib'
-import { hypercube } from 'primalib'
+import { space } from 'primalib'
 
-const h = hypercube([0, 0, 0], [1, 1, 1])
-h.type = 'hypercube'
+const h = space([0, 0, 0], [1, 1, 1])
+h.type = 'space'
 h.dim = 3
 
 genus(h)                // → 0
@@ -323,11 +323,11 @@ isOrientable(h)         // → true
 ### Example 2: Fiber Bundle Construction
 
 ```javascript
-import { fiberBundle, hypercube, point } from 'primalib'
+import { fiberBundle, space, point } from 'primalib'
 
 // Create circle bundle over sphere
-const base = hypercube([0, 0], [1, 1])  // Base space
-const fiber = hypercube([0], [1])       // Fiber (circle)
+const base = space([0, 0], [1, 1])  // Base space
+const fiber = space([0], [1])       // Fiber (circle)
 
 const projection = (p) => {
   const coords = p.coords || p
@@ -344,10 +344,10 @@ total.toArray()  // → All points in base × fiber
 ### Example 3: Sections
 
 ```javascript
-import { fiberBundle, hypercube, point } from 'primalib'
+import { fiberBundle, space, point } from 'primalib'
 
-const base = hypercube([0, 0], [1, 1])
-const fiber = hypercube([0], [1])
+const base = space([0, 0], [1, 1])
+const fiber = space([0], [1])
 
 const projection = (p) => point((p.coords || p)[0], (p.coords || p)[1])
 const bundle = fiberBundle(base, fiber, projection)
@@ -370,15 +370,15 @@ linearSection.toArray()  // → Points with linear fiber
 ### Example 4: Hypercube Decomposition
 
 ```javascript
-import { hypercubeAsFiberBundle } from 'primalib'
+import { spaceAsFiberBundle } from 'primalib'
 
-// Decompose 4D hypercube as 2D × 2D fiber bundle
-const bundle = hypercubeAsFiberBundle(4)
+// Decompose 4D space as 2D × 2D fiber bundle
+const bundle = spaceAsFiberBundle(4)
 
 console.log('Base dimension:', bundle.base.dim)   // → 2
 console.log('Fiber dimension:', bundle.fiber.dim) // → 2
 
-// Total space is 4D hypercube
+// Total space is 4D space
 const total = bundle.totalSpace()
 const vertices = total.toArray()
 console.log('Total vertices:', vertices.length)  // → 16 (2⁴)
@@ -387,11 +387,11 @@ console.log('Total vertices:', vertices.length)  // → 16 (2⁴)
 ### Example 5: Cartesian Products
 
 ```javascript
-import { cartesianProduct, hypercube } from 'primalib'
+import { cartesianProduct, space } from 'primalib'
 
-// Product of 1D and 2D hypercubes
-const line = hypercube([0], [1])      // 1D
-const square = hypercube([0, 0], [1, 1])  // 2D
+// Product of 1D and 2D spaces
+const line = space([0], [1])      // 1D
+const square = space([0, 0], [1, 1])  // 2D
 
 const product = cartesianProduct(line, square)
 product.toArray()
@@ -405,11 +405,11 @@ product.toArray()
 ### Example 6: Betti Numbers
 
 ```javascript
-import { bettiNumbers, hypercube } from 'primalib'
+import { bettiNumbers, space } from 'primalib'
 
 // 3D cube
-const cube = hypercube([0, 0, 0], [1, 1, 1])
-cube.type = 'hypercube'
+const cube = space([0, 0, 0], [1, 1, 1])
+cube.type = 'space'
 cube.dim = 3
 
 const betti = bettiNumbers(cube)
@@ -430,10 +430,10 @@ const torusBetti = bettiNumbers({type: 'torus'})
 ### Example 7: Comprehensive Analysis
 
 ```javascript
-import { topologicalInvariants, hypercube } from 'primalib'
+import { topologicalInvariants, space } from 'primalib'
 
-const h = hypercube([0, 0, 0], [1, 1, 1])
-h.type = 'hypercube'
+const h = space([0, 0, 0], [1, 1, 1])
+h.type = 'space'
 h.dim = 3
 
 const invariants = topologicalInvariants(h)
@@ -449,11 +449,11 @@ console.log('Betti numbers:', invariants.bettiNumbers)     // → [1, 0, 0, 1]
 ### Example 8: Integration with PrimaSet
 
 ```javascript
-import { primaSet, fiberBundle, hypercube } from 'primalib'
+import { primaSet, fiberBundle, space } from 'primalib'
 
 // Analyze multiple fiber bundles
 const bundles = primaSet([2, 3, 4, 5]).map(dim => {
-  return hypercubeAsFiberBundle(dim)
+  return spaceAsFiberBundle(dim)
 })
 
 bundles.forEach(bundle => {
@@ -466,10 +466,10 @@ bundles.forEach(bundle => {
 ### Example 9: Path Lifting
 
 ```javascript
-import { fiberBundle, hypercube, point } from 'primalib'
+import { fiberBundle, space, point } from 'primalib'
 
-const base = hypercube([0, 0], [1, 1])
-const fiber = hypercube([0], [1])
+const base = space([0, 0], [1, 1])
+const fiber = space([0], [1])
 const projection = (p) => point((p.coords || p)[0], (p.coords || p)[1])
 const bundle = fiberBundle(base, fiber, projection)
 
@@ -500,18 +500,18 @@ lifted.toArray()
 PrimaTopo integrates seamlessly with other PrimaLib modules:
 
 ```javascript
-import { topologicalInvariants, hypercube } from 'primalib'
+import { topologicalInvariants, space } from 'primalib'
 import { primaSet } from 'primalib'
 
-// Analyze hypercubes of different dimensions
-const hypercubes = primaSet([2, 3, 4, 5]).map(dim => {
-  const h = hypercube(new Array(dim).fill(0), new Array(dim).fill(1))
-  h.type = 'hypercube'
+// Analyze spaces of different dimensions
+const spaces = primaSet([2, 3, 4, 5]).map(dim => {
+  const h = space(new Array(dim).fill(0), new Array(dim).fill(1))
+  h.type = 'space'
   h.dim = dim
   return topologicalInvariants(h)
 })
 
-hypercubes.forEach(inv => {
+spaces.forEach(inv => {
   console.log(`Euler: ${inv.eulerCharacteristic}, Betti: ${inv.bettiNumbers}`)
 })
 ```
@@ -546,7 +546,7 @@ hypercubes.forEach(inv => {
 
 ### Orientability
 - **Definition**: Consistent choice of orientation at every point
-- **Orientable**: Sphere, torus, hypercube
+- **Orientable**: Sphere, torus, space
 - **Non-orientable**: Möbius strip, Klein bottle
 
 ### Compactness

@@ -57,14 +57,25 @@ export interface Point {
 
 export declare function point(...coords: number[]): Point
 
-export interface Hypercube {
+export interface Space {
   dim: number
+  isAlgebraic: boolean
+  algebra: 'complex' | 'quaternion' | 'octonion' | null
   vertices(): Point[]
   sample(res?: number): PrimaSet<Point>
   subdivide(dimIdx: number, parts: number): PrimaSet<Space>
+  contains(p: Point): boolean
+  project(p: Point, normal?: number[]): Point
+  distance(p: Point, normal?: number[]): number
+  split(): any
+  units(): Point[] | null
+  point(...coords: number[]): Point
+  vector(...coords: number[]): Point
+  toArray(): number[][]
+  toThreeMesh(): number[][]
 }
 
-export declare function hypercube(corner: number | number[], sides: number | number[]): Hypercube
+export declare function space(corner: number | number[], sides: number | number[]): Space
 
 // Topology
 export interface Geometry {
@@ -91,7 +102,7 @@ export interface FiberBundle {
 
 export declare function fiberBundle(base: Geometry, fiber: Geometry, projection: (p: Point) => Point): FiberBundle
 export declare function cartesianProduct(geomA: Geometry, geomB: Geometry): PrimaSet<Point>
-export declare function hypercubeAsFiberBundle(dim: number): FiberBundle
+export declare function spaceAsFiberBundle(dim: number): FiberBundle
 export declare function bettiNumbers(geometry: Geometry): number[] | null
 export declare function topologicalInvariants(geometry: Geometry): {
   genus: number

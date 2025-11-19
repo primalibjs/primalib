@@ -117,14 +117,6 @@ export interface Space {
 }
 
 export declare function space(corner: number | number[], sides: number | number[]): Space
-export declare function algebraicSpace(dim: 2 | 4 | 8): Space
-export declare function complexSpace(): Space
-export declare function quaternionSpace(): Space
-export declare function octonionSpace(): Space
-
-// Hypercube - Legacy alias to space (backward compatible)
-export interface Hypercube extends Space {}
-export declare function hypercube(corner: number | number[], sides: number | number[]): Space
 
 // Topology
 export interface Geometry {
@@ -151,7 +143,7 @@ export interface FiberBundle {
 
 export declare function fiberBundle(base: Geometry, fiber: Geometry, projection: (p: Point) => Point): FiberBundle
 export declare function cartesianProduct(geomA: Geometry, geomB: Geometry): PrimaSet<Point>
-export declare function hypercubeAsFiberBundle(dim: number): FiberBundle
+export declare function spaceAsFiberBundle(dim: number): FiberBundle
 export declare function bettiNumbers(geometry: Geometry): number[] | null
 export declare function topologicalInvariants(geometry: Geometry): {
   genus: number
@@ -234,11 +226,6 @@ declare const _default: {
   octonion: typeof octonion
   vector: typeof vector
   space: typeof space
-  algebraicSpace: typeof algebraicSpace
-  complexSpace: typeof complexSpace
-  quaternionSpace: typeof quaternionSpace
-  octonionSpace: typeof octonionSpace
-  hypercube: typeof hypercube
   sq: typeof sq
   inv: typeof inv
   neg: typeof neg

@@ -4,9 +4,7 @@
  *  Plugin <-> FreeFunction symmetry through composition
  */
 
-import { primaSet, operations, point } from "@primalib/core"
-import { complex, quaternion, octonion } from "@primalib/geo"
-import { space } from "@primalib/core"
+import { primaSet, operations, point, space, complex, quaternion, octonion } from "@primalib/core"
 
 // Remove validate helper - use type system instead
 // No more validate functions - rely on primaSet(typecheck)
@@ -51,31 +49,6 @@ primaSet.plugin(Array, {
   take: function(n) { return primaSet(this.slice(0, n), {memo: true}) },
   reduce: (arr, f, init) => arr.reduce(f, init)
 })
-
-// ============================================================================
-// LAYER 2: 2D POWER SPACE GEOMETRY
-// ============================================================================
-
-// Complex plane as algebraic space (2D)
-const complexPlane = (bounds = [-10, 10, -10, 10]) => {
-  const s = space([bounds[0], bounds[2]], [bounds[1] - bounds[0], bounds[3] - bounds[2]])
-  return s.sample(50)
-}
-
-// Quaternion space as algebraic space (4D)
-const quaternionSpace4D = (bounds = [-1, 1, -1, 1, -1, 1, -1, 1]) => {
-  const s = space(
-    [bounds[0], bounds[2], bounds[4], bounds[6]],
-    [bounds[1] - bounds[0], bounds[3] - bounds[2], bounds[5] - bounds[4], bounds[7] - bounds[6]]
-  )
-  return s.sample(10)
-}
-
-// Octonion vertices from algebraic space (8D)
-const octonionVertices = () => {
-  const s = space(new Array(8).fill(0), new Array(8).fill(1))
-  return s.vertices()
-}
 
 // ============================================================================
 // LAYER 1: PARITY PARTITION
@@ -556,41 +529,11 @@ const primeGaps = primaSet(function* () {
   }
 })
 
-// ============================================================================
-// LAYER 11: HYBRID ARCHITECTURE EXPOSURE
-// ============================================================================
-
-// Direct array access (FreeFunction style)
-export const prima = { N: n.slice(), Z: z.slice(), R: r.slice() }
-
-// PrimaSet access (Plugin style)  
-export const primo = { N, Z, R, primes }
-
-// 2D power space access
-export const algebraicSpaces = { C: complexPlane, H: quaternionSpace4D, O: octonionVertices }
-
-// Geometric mapping
-export const geo = {
-  primeComplex,
-  twinComplex,
-  quadraticCurve,
-  address,
-  geometricSieve,
-  geometricSieveBatch,
-  isPrimeGeometric
-}
-
-// Unified export - choose your style
-complex.primes = primeComplex
-twinComplex.primes = twinComplex
-
 // Export all public functions individually
 export { 
   N, Z, R, 
   evens, odds, multiplesOf,
   twins, cousins, sexy, primeGaps,
-  complex, quaternion, octonion, 
-  complexPlane, quaternionSpace4D, octonionVertices,
   primeComplex, twinComplex, quadraticCurve,
   geometricSieve, geometricSieveBatch, geometricSieveLegacy, isPrimeGeometric, primalPlane,
   address,
@@ -599,21 +542,4 @@ export {
   primalPosition, primalDistance, twinDistances,
   dimensionStats, twinAdmissibility,
   primes
-}
-
-// Legacy compatibility - all functions available
-export default { 
-  address, 
-  N, Z, R, primes,
-  evens, odds, multiplesOf,
-  twins, cousins, sexy, primeGaps,
-  complex, quaternion, octonion,
-  complexPlane, quaternionSpace4D, octonionVertices,
-  primeComplex, twinComplex, quadraticCurve,
-  geometricSieve, primalPlane,
-  residualSpace, residualDensity,
-  goldbachPairs, goldbachVectors, goldbachTable,
-  primalPosition, primalDistance, twinDistances,
-  dimensionStats, twinAdmissibility,
-  ...prima, ...primo, ...space, ...geo 
 }

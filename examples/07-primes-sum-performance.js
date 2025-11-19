@@ -5,7 +5,7 @@
  * Tests summing all primes from 2 to 1M (and optionally 10M).
  */
 
-import { primes, primaSet } from '../primalib.mjs'
+import { primes, primaSet } from 'primalib'
 
 // Get firstDivisor from primaSet operations
 const { firstDivisor } = primaSet

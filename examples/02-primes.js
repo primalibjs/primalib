@@ -4,8 +4,7 @@
  * Working with infinite prime sequences
  */
 
-import { primes, address } from '../primalib.mjs'
-import { primaSet } from '../primaset.mjs'
+import { primes, address, primaSet } from 'primalib'
 const { sum } = primaSet
 
 console.log('=== Example 2: Prime Numbers ===\n')

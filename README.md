@@ -110,10 +110,10 @@ primes.take(10)   // → [2,3,5,7,11,13,17,19,23,29]
 
 ### Geometry
 ```javascript
-import { point, hypercube } from 'primalib'
+import { point, space } from 'primalib'
 
 point(1,2).add(point(3,4))  // → point(4,6)
-hypercube([0,0,0], [1,1,1]).vertices()  // → 8 corner points
+space([0,0,0], [1,1,1]).vertices()  // → 8 corner points
 ```
 
 ### Linear Algebra

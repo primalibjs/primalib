@@ -78,7 +78,7 @@ N(10).sq()                      // → [1,4,9,16,25,36,49,64,81,100]
 ### Geometry
 
 ```javascript
-import { point, vector, hypercube, line, rectangle, square, cube } from 'primalib'
+import { point, vector, space, line, rectangle, square, cube } from 'primalib'
 
 point(1, 2, 3)                  // 3D point
 point(1, 2).add(point(3, 4))     // → point(4, 6)
@@ -88,8 +88,8 @@ vector(1, 2, 3)                  // Vector (extends point)
 vector(1, 2).dot(vector(3, 4))   // → 11 (dot product)
 vector(1, 2, 3).cross(vector(4, 5, 6))  // → cross product (3D only)
 
-hypercube([0,0], [1,1])          // 2D square
-hypercube([0,0,0], [1,1,1])      // 3D cube
+space([0,0], [1,1])          // 2D square
+space([0,0,0], [1,1,1])      // 3D cube
 line(0, 5)                       // 1D line segment
 rectangle([0,0], [2,3])          // 2D rectangle
 square([0,0], 2)                 // 2D square
@@ -240,7 +240,7 @@ const [x, y, z] = point(1, 2, 3)  // Destructuring works
 - **`primaset.mjs`**: Core lazy set factory (`primaSet`)
 - **`primaops.mjs`**: Operations, methods, generators (`sq`, `sum`, `mean`, etc.)
 - **`primanum.mjs`**: Number sequences (`N`, `Z`, `R`, `primes`)
-- **`primageo.mjs`**: Geometry (`point`, `vector`, `hypercube`, etc.)
+- **`primageo.mjs`**: Geometry (`point`, `vector`, `space`, etc.)
 - **`primalin.mjs`**: Linear algebra (`matrix`, `polynomial`, `vector` operations)
 - **`primatree.mjs`**: Tree handling (`node`, `tree`, `vdom`)
 - **`primastat.mjs`**: Statistics (`mean`, `stddev`, `variance`, etc.)
@@ -316,7 +316,7 @@ node({a:1, b:2}).walk('depth')   // Depth-first iterator
 - **Sequences**: `N()`, `Z()`, `R()`, `primes` - Infinite generators
 - **Operations**: `sq`, `sum`, `mean`, `min`, `max` - Free functions
 - **Methods**: `.map()`, `.filter()`, `.take()`, `.sum()` - Chainable
-- **Geometry**: `point()`, `vector()`, `hypercube()` - Geometric objects
+- **Geometry**: `point()`, `vector()`, `space()` - Geometric objects
 - **Linear**: `matrix()`, `polynomial()` - Linear algebra
 - **Tree**: `node()`, `tree()`, `vdom()` - Tree structures
 - **Materialize**: `.toArray()`, `.get(i)`, `.count()`, `[...set]`

@@ -5,7 +5,7 @@
  * as finite arrays - free browseable, just like a normal array.
  */
 
-import { primes, primaSet, N } from '../primalib.mjs'
+import { primes, primaSet, N } from 'primalib'
 const { sq, sum, take } = primaSet
 
 console.log('🌟 PrimaSet: Infinite Sets of Primes\n')

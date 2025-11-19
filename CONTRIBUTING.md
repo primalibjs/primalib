@@ -516,7 +516,7 @@ primaset: add sliding window cache option
 
 primanum: fix prime sequence initialization
 
-primageo: optimize hypercube vertex calculation
+primageo: optimize space vertex calculation
 
 doc: add PRIMATREE.md documentation
 ```
