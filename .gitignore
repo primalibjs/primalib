@@ -25,3 +25,5 @@ coverage/
 # Temporary files
 *.tmp
 *.temp
+.cursorindexingignore
+.specstory/

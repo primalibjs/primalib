@@ -7,6 +7,16 @@
   "browser": "./dist/primalib.min.js",
   "types": "./primalib.d.ts",
   "type": "module",
+  "workspaces": [
+    "core",
+    "geo",
+    "num",
+    "stat",
+    "lin",
+    "topo",
+    "tree",
+    "web"
+  ],
   "exports": {
     ".": {
       "import": "./primalib.mjs",
@@ -24,13 +34,13 @@
     "./tree": "@primalib/tree"
   },
   "dependencies": {
-    "@primalib/core": "^0.2.0",
-    "@primalib/geo": "^0.2.0",
-    "@primalib/num": "^0.2.0",
-    "@primalib/stat": "^0.2.0",
-    "@primalib/lin": "^0.2.0",
-    "@primalib/topo": "^0.2.0",
-    "@primalib/tree": "^0.2.0"
+    "@primalib/core": "file:./core",
+    "@primalib/geo": "file:./geo",
+    "@primalib/num": "file:./num",
+    "@primalib/stat": "file:./stat",
+    "@primalib/lin": "file:./lin",
+    "@primalib/topo": "file:./topo",
+    "@primalib/tree": "file:./tree"
   },
   "scripts": {
     "test": "node primalib.test.mjs",

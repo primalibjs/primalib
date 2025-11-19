@@ -17,8 +17,8 @@
     }
   },
   "dependencies": {
-    "@primalib/core": "^0.2.0",
-    "primalib": "^0.2.0"
+    "@primalib/core": "file:../core",
+    "primalib": "file:.."
   },
   "keywords": [
     "experimental",

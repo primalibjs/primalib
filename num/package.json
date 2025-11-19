@@ -10,8 +10,8 @@
     }
   },
   "dependencies": {
-    "@primalib/core": "^0.2.0",
-    "@primalib/geo": "^0.2.0"
+    "@primalib/core": "file:../core",
+    "@primalib/geo": "file:../geo"
   },
   "keywords": [
     "primes",

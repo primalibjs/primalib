@@ -10,7 +10,7 @@
     }
   },
   "dependencies": {
-    "@primalib/core": "^0.2.0"
+    "@primalib/core": "file:../core"
   },
   "keywords": [
     "topology",
