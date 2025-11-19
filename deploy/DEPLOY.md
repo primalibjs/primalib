@@ -1,52 +1,114 @@
 # PrimaLib Deployment Guide
 
-Automated deployment system with comprehensive checks and reporting.
+Automated deployment system with comprehensive checks, testing, building, and npm publishing.
 
 ## Quick Start
 
 ```bash
-# Run deployment checks (dry run)
-node deploy.mjs --dry-run
+# 1. Check deployment readiness (dry run - safe)
+npm run deploy:check
 
-# Full deployment
-node deploy.mjs
+# 2. Review the deployment report
+cat deploy/deployment-report-0.2.0.md
 
-# Run deployment tests
-node deploy.test.mjs
+# 3. Deploy to npm (publishes packages - permanent!)
+npm run deploy
 ```
 
-**Usage:** `node deploy.mjs [options]`
+## ⚠️  Important Warnings
 
-## Overview
+- **npm publish is PERMANENT** after 24 hours
+- **Version numbers cannot be reused**
+- **Always run `deploy:check` first**
+- **Review deployment report before deploying**
 
-The deployment system automates:
-- Version consistency checks
-- Test suite execution
-- Build verification
-- Git status validation
-- npm authentication check
-- Bundle size reporting
-- Component inventory
-- Deployment report generation
+## What Happens During Deployment
+
+The `npm run deploy` command will:
+
+### 1. Run Pre-Deployment Checks
+- **Version consistency** across all packages
+- **Git status** - working directory must be clean
+- **npm authentication** - must be logged in (`npm whoami`)
+- **Test suite** - all 302 tests must pass
+- **Build bundles** - ESBuild creates browser and Node bundles
+
+### 2. Generate Deployment Report
+- Bundle sizes (primalib.min.js, primalib.cjs, etc.)
+- Component sizes (each @primalib/* module)
+- Statistics (files, lines, sizes for code/tests/docs)
+- Saved to `deploy/deployment-report-{version}.md`
+
+### 3. Publish to npm (in order)
+**First:** 8 submodules
+- `@primalib/core@0.2.0`
+- `@primalib/geo@0.2.0`
+- `@primalib/num@0.2.0`
+- `@primalib/stat@0.2.0`
+- `@primalib/lin@0.2.0`
+- `@primalib/topo@0.2.0`
+- `@primalib/tree@0.2.0`
+- `@primalib/web@0.2.0` (experimental)
+
+**Then:** Main package
+- `primalib@0.2.0` (depends on all submodules)
+
+*This order is critical because the main package depends on the submodules.*
+
+### 4. Create Git Tag
+- Creates `v{version}` tag
+- Pushes to origin
 
 ## Usage
 
-### Basic Deployment
+### Step 1: Dry Run (Always Do This First!)
 
 ```bash
-cd primalib
-node deploy/deploy.mjs
+npm run deploy:check
+# or
+cd primalib && node deploy/deploy.mjs --dry-run
 ```
 
-This runs all checks and generates a deployment report.
+This is **completely safe** and performs all checks without publishing anything.
 
-### Options
+### Step 2: Review Report
 
 ```bash
-# Dry run (no deployment)
+cat deploy/deployment-report-0.2.0.md
+```
+
+Review:
+- All tests passing?
+- Bundle sizes reasonable?
+- Component versions correct?
+- Git status clean?
+
+### Step 3: Deploy to npm
+
+```bash
+npm run deploy
+# or
+cd primalib && node deploy/deploy.mjs
+```
+
+**⚠️  This will publish to npm!**
+
+The script will:
+1. Show you what will be published
+2. Wait 5 seconds (press Ctrl+C to cancel)
+3. Publish 8 submodules to npm
+4. Publish main package to npm
+5. Create and push git tag
+
+**This action is permanent after 24 hours!**
+
+## Options
+
+```bash
+# Dry run (no publishing)
 node deploy/deploy.mjs --dry-run
 
-# Skip tests (faster, use with caution)
+# Skip tests (not recommended)
 node deploy/deploy.mjs --skip-tests
 
 # Skip build (if already built)
@@ -56,208 +118,20 @@ node deploy/deploy.mjs --skip-build
 node deploy/deploy.mjs --help
 ```
 
-### Deployment Tests
-
-Run comprehensive deployment readiness tests:
-
-```bash
-node deploy/deploy.test.mjs
-```
-
-Tests verify:
-- Version consistency across packages
-- Documentation completeness
-- Build system integrity
-- Package structure
-- Test coverage
-- Git repository state
-- Security (no sensitive data)
-- Bundle sizes
-
-## Deployment Process
-
-### 1. Pre-Deployment
-
-```bash
-# Ensure all changes committed
-git status
-
-# Run deployment checks
-node deploy/deploy.mjs --dry-run
-
-# Run deployment tests
-node deploy/deploy.test.mjs
-
-# Review deployment report
-cat deploy/deployment-report-0.2.0.md
-```
-
-### 2. Deployment
-
-```bash
-# Full deployment check
-node deploy/deploy.mjs
-
-# Test npm publish (dry run)
-npm publish --dry-run
-
-# Publish to npm
-npm publish
-
-# Publish submodules
-cd core && npm publish
-cd ../geo && npm publish
-cd ../num && npm publish
-cd ../stat && npm publish
-cd ../lin && npm publish
-cd ../topo && npm publish
-cd ../tree && npm publish
-```
-
-### 3. Post-Deployment
-
-```bash
-# Tag release
-git tag primalib-v0.2.0
-
-# Push tags
-git push --tags
-
-# Verify installation
-npm install primalib@latest
-
-# Test imports
-node -e "import('primalib').then(m => console.log('✅ Import works'))"
-```
-
-## Deployment Report
-
-After running `deploy.mjs`, a report is generated:
-
-- **Markdown:** `deploy/deployment-report-{version}.md` (human-readable)
-- **JSON:** `deploy/deployment-report-{version}.json` (machine-readable)
-
-### Report Contents
-
-#### Pre-Deployment Checks
-- Version consistency across all packages
-- Test suite results (passed/failed)
-- Build status
-- Git working directory status
-- npm authentication status
-
-#### Bundle Sizes
-- ESM bundle (primalib.min.mjs)
-- IIFE bundle (primalib.min.js)
-- CommonJS bundle (primalib.cjs)
-- Source maps
-
-#### Component Inventory
-- All submodules with versions
-- Entry points
-- Individual component sizes
-
-#### Statistics
-- Total lines of code
-- Number of modules
-- Documentation files
-- Test files
-
-## Deployment Checks
-
-### Version Consistency
-Ensures all `package.json` files have matching versions:
-```
-primalib/package.json         → 0.2.0
-primalib/core/package.json    → 0.2.0
-primalib/geo/package.json     → 0.2.0
-...
-```
-
-### Test Suite
-Runs `npm test` and verifies:
-- All tests passing
-- No test failures
-- Test count reasonable (>0)
-
-### Build System
-Runs `npm run build` and verifies:
-- Build completes successfully
-- All bundles created
-- No build errors
-
-### Git Status
-Checks working directory:
-- Clean working directory (ideal)
-- Or reports uncommitted changes (warning)
-
-### npm Authentication
-Verifies `npm whoami` succeeds (optional, warns if not authenticated)
-
-## Common Scenarios
-
-### First Time Setup
-
-```bash
-# Install dependencies
-npm install
-
-# Run build
-npm run build
-
-# Run tests
-npm test
-
-# Dry run deployment
-node deploy/deploy.mjs --dry-run
-```
-
-### Quick Deploy (Skip Tests)
-
-```bash
-# If tests already run separately
-node deploy/deploy.mjs --skip-tests
-```
-
-### Deploy After Build
-
-```bash
-# If already built
-node deploy/deploy.mjs --skip-build
-```
-
-### CI/CD Integration
-
-```bash
-#!/bin/bash
-set -e
-
-# Run deployment tests
-node primalib/deploy/deploy.test.mjs
-
-# Run deployment checks
-node primalib/deploy/deploy.mjs --dry-run
-
-# If all passed, deploy
-if [ $? -eq 0 ]; then
-  npm publish
-fi
-```
-
 ## Troubleshooting
 
 ### Version Mismatch
 
 ```
-❌ Version mismatch found:
-  @primalib/core: 0.1.0 (expected 0.2.0)
+❌ Version mismatch: @primalib/core is 0.1.0, expected 0.2.0
 ```
 
-**Fix:** Update all `package.json` versions to match:
+**Fix:** Update all package.json versions:
 ```bash
-# Update manually or with script
-for pkg in core geo num stat lin topo tree; do
-  cd $pkg
+# Manually edit each package.json
+# Or use a script
+for module in core geo num stat lin topo tree web; do
+  cd $module
   npm version 0.2.0 --no-git-tag-version
   cd ..
 done
@@ -269,92 +143,164 @@ done
 ❌ Tests failed: 300 passed, 2 failed
 ```
 
-**Fix:** Run tests and fix failures:
+**Fix:**
 ```bash
-npm test
-# Fix failing tests
+npm test  # See which tests fail
+# Fix the failing tests
 npm test  # Verify all pass
 ```
 
 ### Build Errors
 
 ```
-❌ Command failed: npm run build
+❌ Build failed
 ```
 
-**Fix:** Check build system:
+**Fix:**
 ```bash
-npm run build
-# Fix errors in build.mjs or source files
+npm run build  # See the error
+# Fix the error
+npm install    # Ensure dependencies installed
 ```
 
 ### Uncommitted Changes
 
 ```
-⚠️ Uncommitted changes found:
-M primalib/package.json
-M primalib/README.md
+⚠️  Working directory not clean
 ```
 
-**Fix:** Commit or stash changes:
+**Fix:**
 ```bash
+git status
 git add .
 git commit -m "primalib: prepare for deployment"
-# Or: git stash
 ```
 
 ### npm Authentication
 
 ```
-⚠️ npm not authenticated
+⚠️  npm not authenticated
 ```
 
-**Fix:** Login to npm:
+**Fix:**
 ```bash
 npm login
-npm whoami  # Verify
+npm whoami  # Verify: should show your username
 ```
 
-## Security
+### Publish Failed
 
-### Pre-Publication Checklist
-
-- [ ] No secrets in code
-- [ ] No API keys in package.json
-- [ ] .npmignore excludes tests
-- [ ] .npmignore excludes examples
-- [ ] .npmignore excludes dev docs
-- [ ] Version bump documented in CHANGELOG
-- [ ] README updated with new features
-- [ ] Breaking changes documented
-
-### Sensitive Files
-
-`.npmignore` should include:
 ```
-test/
-tests/
-*.test.mjs
-examples/
-perf/
-dev/
-.env
-.env.*
+❌ Failed to publish @primalib/core
 ```
 
-## Automation
+**Common causes:**
+- Version already exists on npm
+- Not logged in
+- No publish permission
+- Network issue
 
-### GitHub Actions Example
+**Fix:**
+```bash
+# Check if version exists
+npm view @primalib/core@0.2.0
+
+# If exists, bump version
+npm version patch  # or minor/major
+
+# Check login
+npm whoami
+
+# Check permissions
+npm access ls-packages
+```
+
+## Deployment Workflow
+
+### Before First Deployment
+
+```bash
+# 1. Ensure logged into npm
+npm login
+npm whoami
+
+# 2. Install dependencies
+npm install
+
+# 3. Run tests
+npm test
+
+# 4. Build bundles
+npm run build
+
+# 5. Dry run
+npm run deploy:check
+```
+
+### Regular Deployment
+
+```bash
+# 1. Commit all changes
+git add .
+git commit -m "primalib: ready for v0.2.0"
+git push
+
+# 2. Dry run
+npm run deploy:check
+
+# 3. Review report
+cat deploy/deployment-report-0.2.0.md
+
+# 4. Deploy
+npm run deploy
+
+# 5. Verify on npm
+npm view primalib
+npm install primalib@latest
+
+# 6. Test installation
+mkdir /tmp/test && cd /tmp/test
+npm init -y
+npm install primalib
+node -e "const {N, sq, sum} = require('primalib'); console.log(sum(sq(N(10))))"
+# Should output: 385
+```
+
+### After Deployment
+
+```bash
+# 1. Create GitHub release
+# Go to: https://github.com/primalibjs/primalib/releases/new
+# Tag: v0.2.0
+# Title: PrimaLib v0.2.0
+# Description: (from CHANGELOG.md)
+
+# 2. Announce
+# - Twitter
+# - Blog
+# - Newsletter
+
+# 3. Update docs
+# - Documentation site
+# - Examples
+```
+
+## CI/CD Integration
+
+### GitHub Actions
+
+Create `.github/workflows/publish.yml`:
 
 ```yaml
-name: Deploy
+name: Publish to npm
+
 on:
   push:
     tags:
-      - 'primalib-v*'
+      - 'v*'
 
 jobs:
-  deploy:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -364,16 +310,17 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       
       - run: npm install
-      - run: node primalib/deploy/deploy.test.mjs
-      - run: node primalib/deploy/deploy.mjs
-      - run: npm publish
+      - run: npm test
+      - run: npm run build
+      - run: npm run deploy:check
+      - run: npm run deploy
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 ```
 
-### npm Scripts
+## npm Scripts
 
-Add to `package.json`:
+Already configured in `package.json`:
 
 ```json
 {
@@ -385,40 +332,31 @@ Add to `package.json`:
 }
 ```
 
-Usage:
-```bash
-npm run deploy:check
-npm run deploy:test
-npm run deploy
-```
+## Security Checklist
 
-## Rollback
+Before deployment:
 
-If deployment fails:
-
-```bash
-# Unpublish (within 72 hours)
-npm unpublish primalib@0.2.0
-
-# Or deprecate
-npm deprecate primalib@0.2.0 "Broken release, use 0.1.9"
-
-# Fix issues and redeploy
-npm version patch
-node deploy/deploy.mjs
-npm publish
-```
+- [ ] No secrets in code
+- [ ] No API keys in package.json
+- [ ] .npmignore excludes dev files
+- [ ] .npmignore excludes tests
+- [ ] Version bumped in CHANGELOG.md
+- [ ] README updated
+- [ ] Breaking changes documented
+- [ ] All tests pass
+- [ ] Git working directory clean
+- [ ] Logged into correct npm account
 
 ## Best Practices
 
-1. **Always dry run first:** `--dry-run` flag
-2. **Review report:** Check bundle sizes and components
-3. **Run tests:** Never skip deployment tests
-4. **Version bump:** Follow semver (major.minor.patch)
+1. **Always dry run first:** `npm run deploy:check`
+2. **Review the report:** Check sizes and versions
+3. **Never skip tests:** They catch critical bugs
+4. **Follow semver:** major.minor.patch
 5. **Update CHANGELOG:** Document all changes
-6. **Tag releases:** `git tag primalib-v{version}`
-7. **Test installation:** `npm install primalib@latest`
-8. **Monitor issues:** Check npm/GitHub after deployment
+6. **Test after publish:** Install and verify
+7. **Monitor issues:** Check npm/GitHub after release
+8. **Communicate:** Announce breaking changes
 
 ## Support
 
@@ -429,4 +367,3 @@ npm publish
 ---
 
 **PrimaLib Deployment** — *Automated, tested, reliable.* 🚀
-

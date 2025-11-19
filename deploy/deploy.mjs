@@ -392,15 +392,102 @@ const deploy = async (options = {}) => {
     
     // Deploy
     if (dryRun) {
-      log('\n🔍 Dry run complete - no deployment executed', 'info')
+      log('\n🔍 Dry run complete - no actual publishing', 'info')
+      log('\nTo deploy for real, run: npm run deploy', 'info')
     } else {
-      log('\n📦 Ready for deployment!', 'success')
-      log('\nNext steps:', 'info')
-      log('  1. Review deployment-report-' + version + '.md')
-      log('  2. Run: npm publish --dry-run')
-      log('  3. Run: npm publish')
-      log('  4. git tag primalib-v' + version)
-      log('  5. git push --tags')
+      // Confirm deployment
+      console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+      log('⚠️  READY TO PUBLISH TO NPM', 'warn')
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n')
+      console.log('This will publish 9 packages to npm (permanent):')
+      console.log('  • @primalib/core@' + version)
+      console.log('  • @primalib/geo@' + version)
+      console.log('  • @primalib/num@' + version)
+      console.log('  • @primalib/stat@' + version)
+      console.log('  • @primalib/lin@' + version)
+      console.log('  • @primalib/topo@' + version)
+      console.log('  • @primalib/tree@' + version)
+      console.log('  • @primalib/web@' + version + ' (experimental)')
+      console.log('  • primalib@' + version)
+      console.log('\n⚠️  npm publish is PERMANENT after 24 hours')
+      console.log('⚠️  You cannot unpublish or reuse version numbers')
+      console.log('\nPress Ctrl+C to cancel, or wait 5 seconds to continue...\n')
+      
+      // Wait 5 seconds
+      await new Promise(resolve => setTimeout(resolve, 5000))
+      
+      // Publish submodules first
+      const submodules = ['core', 'geo', 'num', 'stat', 'lin', 'topo', 'tree', 'web']
+      
+      console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+      log('📦 Step 1: Publishing Submodules', 'step')
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n')
+      
+      for (const module of submodules) {
+        const modulePath = join(rootDir, module)
+        const pkg = JSON.parse(readFileSync(join(modulePath, 'package.json'), 'utf8'))
+        
+        log(`Publishing ${pkg.name}@${pkg.version}...`)
+        try {
+          exec(`cd "${modulePath}" && npm publish --access public`, { silent: false })
+          log(`✓ ${pkg.name} published`, 'success')
+        } catch (err) {
+          throw new Error(`Failed to publish ${pkg.name}: ${err.message}`)
+        }
+      }
+      
+      log('\n✓ All submodules published', 'success')
+      
+      // Publish main package
+      console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+      log('📦 Step 2: Publishing Main Package', 'step')
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n')
+      
+      const mainPkg = JSON.parse(readFileSync(join(rootDir, 'package.json'), 'utf8'))
+      log(`Publishing ${mainPkg.name}@${mainPkg.version}...`)
+      try {
+        exec('npm publish --access public', { silent: false })
+        log(`✓ ${mainPkg.name} published`, 'success')
+      } catch (err) {
+        throw new Error(`Failed to publish ${mainPkg.name}: ${err.message}`)
+      }
+      
+      // Create git tag
+      console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+      log('🏷️  Step 3: Creating Git Tag', 'step')
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n')
+      
+      const tag = `v${version}`
+      try {
+        exec(`git rev-parse ${tag}`, { silent: true })
+        log(`Tag ${tag} already exists`, 'warn')
+      } catch {
+        try {
+          exec(`git tag -a ${tag} -m "Release ${tag}"`)
+          exec(`git push origin ${tag}`)
+          log(`✓ Tag ${tag} created and pushed`, 'success')
+        } catch (err) {
+          log(`Warning: Could not create/push tag: ${err.message}`, 'warn')
+          log('You can create it manually: git tag -a ' + tag + ' -m "Release ' + tag + '"', 'info')
+        }
+      }
+      
+      // Success!
+      console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+      log('🎉 Deployment Complete!', 'success')
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n')
+      console.log('PrimaLib v' + version + ' is now live on npm!\n')
+      console.log('Install it:')
+      console.log('  npm install primalib\n')
+      console.log('Or individual modules:')
+      console.log('  npm install @primalib/core\n')
+      console.log('View on npm:')
+      console.log('  https://www.npmjs.com/package/primalib')
+      console.log('  https://www.npmjs.com/package/@primalib/core\n')
+      console.log('Next steps:')
+      console.log('  1. Create GitHub release: https://github.com/primalibjs/primalib/releases/new')
+      console.log('  2. Announce release (Twitter, blog, etc.)')
+      console.log('  3. Update documentation sites\n')
     }
     
     return report
@@ -447,10 +534,18 @@ const deploy = async (options = {}) => {
       log('  3. Or continue (warning only, not required for dry-run)')
     }
     
+    if (error.message.includes('publish') || error.message.includes('Publish')) {
+      log('\nPublish Failure:', 'warn')
+      log('  1. Check npm authentication: npm whoami')
+      log('  2. Check if version already exists: npm view primalib@' + checks.version)
+      log('  3. If version exists, bump version in all package.json files')
+      log('  4. Check npm access: npm access ls-packages')
+    }
+    
     log('\n💡 Quick Fixes:', 'info')
-    log('  - Skip tests: node deploy.mjs --skip-tests')
-    log('  - Skip build: node deploy.mjs --skip-build')
-    log('  - Dry run: node deploy.mjs --dry-run')
+    log('  - Skip tests: node deploy/deploy.mjs --skip-tests')
+    log('  - Skip build: node deploy/deploy.mjs --skip-build')
+    log('  - Dry run only: node deploy/deploy.mjs --dry-run')
     log('\n📖 Full guide: cat deploy/DEPLOY.md')
     
     process.exit(1)
@@ -477,17 +572,36 @@ const showHelp = () => {
 PrimaLib Deployment System
 
 Usage:
-  node deploy.mjs [options]
+  node deploy/deploy.mjs [options]
+  npm run deploy              # Full deployment to npm
+  npm run deploy:check        # Dry run only (no publishing)
 
 Options:
-  --dry-run      Run checks without deploying
-  --skip-tests   Skip test suite
-  --skip-build   Skip build step
+  --dry-run      Run checks without publishing to npm
+  --skip-tests   Skip test suite (not recommended)
+  --skip-build   Skip build step (not recommended)
   --help, -h     Show this help
 
 Examples:
-  node deploy.mjs --dry-run
-  node deploy.mjs
+  # Check deployment readiness (safe)
+  npm run deploy:check
+  node deploy/deploy.mjs --dry-run
+  
+  # Deploy to npm (publishes packages)
+  npm run deploy
+  node deploy/deploy.mjs
+  
+  # Skip tests (if you're certain they pass)
+  node deploy/deploy.mjs --skip-tests
+
+Workflow:
+  1. Run 'npm run deploy:check' to verify everything is ready
+  2. Review the deployment report
+  3. Run 'npm run deploy' to publish to npm
+  4. Script will publish 8 submodules first, then main package
+  5. Script will create and push git tag v{version}
+
+⚠️  WARNING: npm publish is permanent after 24 hours!
 `)
 }
 
