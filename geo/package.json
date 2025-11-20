@@ -1,6 +1,6 @@
 {
   "name": "@primalib/geo",
-  "version": "0.2.02",
+  "version": "0.2.3",
   "description": "PrimaLib geometry module - points, hypercubes, and geometric primitives",
   "main": "./primageo.mjs",
   "type": "module",
@@ -32,4 +32,3 @@
     "primageo.mjs"
   ]
 }
-

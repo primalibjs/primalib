@@ -1,6 +1,6 @@
 {
   "name": "@primalib/tree",
-  "version": "0.2.02",
+  "version": "0.2.3",
   "description": "PrimaLib tree module - tree handling and Virtual DOM foundation",
   "main": "./primatree.mjs",
   "type": "module",
@@ -31,4 +31,3 @@
     "primatree.mjs"
   ]
 }
-

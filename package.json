@@ -1,6 +1,6 @@
 {
   "name": "primalib",
-  "version": "0.2.02",
+  "version": "0.2.3",
   "description": "PrimaLib - Complete math library with lazy sets, geometry, number theory, and more",
   "main": "./primalib.mjs",
   "module": "./dist/primalib.min.mjs",

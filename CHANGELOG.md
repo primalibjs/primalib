@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.2.3] - 2025-11-20
+
+### Added
+- 
+
+### Changed
+- 
+
+### Fixed
+- 
+
 All notable changes to PrimaLib will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),

@@ -8,6 +8,7 @@ import { readFileSync, writeFileSync, statSync, readdirSync, existsSync } from '
 import { execSync } from 'child_process'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
+import { createInterface } from 'readline'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -52,6 +53,125 @@ const getAllPackages = () => {
     .map(pkg => join(rootDir, pkg, 'package.json'))
     .filter(existsSync)
     .map(path => JSON.parse(readFileSync(path, 'utf8')))
+}
+
+// ============================================================================
+// VERSION MANAGEMENT
+// ============================================================================
+
+const incrementVersion = (version, type = 'patch') => {
+  const [major, minor, patch] = version.split('.').map(Number)
+  
+  switch (type) {
+    case 'major':
+      return `${major + 1}.0.0`
+    case 'minor':
+      return `${major}.${minor + 1}.0`
+    case 'patch':
+    default:
+      return `${major}.${minor}.${patch + 1}`
+  }
+}
+
+const updateAllPackageVersions = (newVersion) => {
+  log(`Updating all packages to v${newVersion}...`, 'step')
+  
+  const packages = ['package.json', ...getAllPackages().map(pkg => {
+    const moduleName = pkg.name.replace('@primalib/', '')
+    return `${moduleName}/package.json`
+  })]
+  
+  packages.forEach(pkgPath => {
+    const fullPath = join(rootDir, pkgPath)
+    if (existsSync(fullPath)) {
+      const pkg = JSON.parse(readFileSync(fullPath, 'utf8'))
+      pkg.version = newVersion
+      writeFileSync(fullPath, JSON.stringify(pkg, null, 2) + '\n')
+      log(`  ✓ ${pkgPath}`, 'success')
+    }
+  })
+  
+  // Also update dist/package.json if it exists
+  const distPkgPath = join(rootDir, 'dist', 'package.json')
+  if (existsSync(distPkgPath)) {
+    const pkg = JSON.parse(readFileSync(distPkgPath, 'utf8'))
+    pkg.version = newVersion
+    writeFileSync(distPkgPath, JSON.stringify(pkg, null, 2) + '\n')
+    log(`  ✓ dist/package.json`, 'success')
+  }
+  
+  log(`All packages updated to v${newVersion}`, 'success')
+}
+
+const updateChangelog = (newVersion, oldVersion) => {
+  log(`Updating CHANGELOG.md...`, 'step')
+  
+  const changelogPath = join(rootDir, 'CHANGELOG.md')
+  if (!existsSync(changelogPath)) {
+    log('CHANGELOG.md not found, skipping', 'warn')
+    return
+  }
+  
+  const changelog = readFileSync(changelogPath, 'utf8')
+  const today = new Date().toISOString().split('T')[0]
+  
+  // Find the first ## [version] entry
+  const versionEntryMatch = changelog.match(/^## \[(\d+\.\d+\.\d+)\]/m)
+  if (!versionEntryMatch) {
+    log('Could not find version entry in CHANGELOG.md, skipping', 'warn')
+    return
+  }
+  
+  // Insert new version entry after the header
+  const headerEnd = changelog.indexOf('\n\n', changelog.indexOf('# Changelog'))
+  const newEntry = `## [${newVersion}] - ${today}
+
+### Added
+- 
+
+### Changed
+- 
+
+### Fixed
+- 
+
+`
+  
+  const updatedChangelog = changelog.slice(0, headerEnd + 2) + newEntry + changelog.slice(headerEnd + 2)
+  writeFileSync(changelogPath, updatedChangelog)
+  log(`CHANGELOG.md updated with v${newVersion} entry`, 'success')
+}
+
+const promptVersionIncrement = (currentVersion, suggestedType = 'patch') => {
+  return new Promise((resolve) => {
+    const rl = createInterface({
+      input: process.stdin,
+      output: process.stdout
+    })
+    
+    const suggestedNum = suggestedType === 'major' ? '3' : suggestedType === 'minor' ? '2' : '1'
+    const suggestedNewVersion = incrementVersion(currentVersion, suggestedType)
+    
+    console.log('\n📦 Version Increment')
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+    console.log(`Current version: v${currentVersion}`)
+    console.log('')
+    console.log('Select version increment type:')
+    console.log(`  1. patch → v${incrementVersion(currentVersion, 'patch')} - bug fixes, small changes`)
+    console.log(`  2. minor → v${incrementVersion(currentVersion, 'minor')} - new features, backward compatible`)
+    console.log(`  3. major → v${incrementVersion(currentVersion, 'major')} - breaking changes`)
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+    console.log(`Suggested: ${suggestedNum} (${suggestedType}) → v${suggestedNewVersion}`)
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n')
+    
+    rl.question(`Enter choice [1-3] (default: ${suggestedNum}): `, (answer) => {
+      rl.close()
+      const choice = answer.trim() || suggestedNum
+      const types = { '1': 'patch', '2': 'minor', '3': 'major' }
+      const type = types[choice] || suggestedType
+      resolve(type)
+    })
+  })
 }
 
 // ============================================================================
@@ -104,13 +224,66 @@ const checkGitStatus = () => {
   const status = exec('git status --porcelain', { silent: true })
   
   if (status && status.trim()) {
-    log('Uncommitted changes found:', 'warn')
-    log(status)
-    return { clean: false, changes: status.split('\n').length }
+    const changes = status.trim().split('\n').filter(line => line.trim())
+    log(`Uncommitted changes found: ${changes.length} file(s)`, 'warn')
+    return { clean: false, changes: changes.length, files: changes }
   }
   
   log('Working directory clean', 'success')
-  return { clean: true, changes: 0 }
+  return { clean: true, changes: 0, files: [] }
+}
+
+const commitAndPushChanges = async (version) => {
+  log('Committing and syncing repository...', 'step')
+  
+  const status = checkGitStatus()
+  if (status.clean) {
+    log('No changes to commit', 'info')
+    return
+  }
+  
+  console.log('\n📝 Uncommitted changes:')
+  status.files.forEach(file => {
+    const trimmed = file.trim()
+    if (!trimmed) return
+    const parts = trimmed.split(/\s+/)
+    const fileStatus = parts[0]
+    const filePath = parts.slice(1).join(' ')
+    const icon = fileStatus === 'M' ? '✏️' : fileStatus === 'A' ? '➕' : fileStatus === 'D' ? '➖' : fileStatus.startsWith('??') ? '🆕' : '❓'
+    console.log(`   ${icon} ${fileStatus} ${filePath}`)
+  })
+  console.log('')
+  
+  // Stage all changes
+  log('Staging all changes...', 'step')
+  exec('git add -A')
+  
+  // Create commit message
+  const commitMessage = `primalib: release v${version}`
+  log(`Committing changes: ${commitMessage}`, 'step')
+  exec(`git commit -m "${commitMessage}"`)
+  log('✓ Changes committed', 'success')
+  
+  // Push to remote
+  log('Pushing to remote repository...', 'step')
+  try {
+    exec('git push')
+    log('✓ Changes pushed to remote', 'success')
+    
+    // Also push tags if any
+    try {
+      const tags = exec('git tag --list', { silent: true })
+      if (tags && tags.trim()) {
+        exec('git push --tags', { ignoreError: true })
+        log('✓ Tags pushed to remote', 'success')
+      }
+    } catch {
+      // Ignore if no tags to push
+    }
+  } catch (err) {
+    log(`Warning: Could not push to remote: ${err.message}`, 'warn')
+    log('You can push manually: git push && git push --tags', 'info')
+  }
 }
 
 const checkNpmAuth = () => {
@@ -330,7 +503,7 @@ const formatReport = (report) => {
 // ============================================================================
 
 const deploy = async (options = {}) => {
-  const { dryRun = false, skipTests = false, skipBuild = false } = options
+  const { dryRun = false, skipTests = false, skipBuild = false, versionIncrement, noVersionBump = false } = options
   
   console.log('\n🚀 PrimaLib Deployment System\n')
   
@@ -343,12 +516,79 @@ const deploy = async (options = {}) => {
   }
   
   try {
-    // Version check
-    const version = checkVersionConsistency()
+    // Get current version
+    const mainPkg = JSON.parse(readFileSync(join(rootDir, 'package.json'), 'utf8'))
+    const currentVersion = mainPkg.version
+    let version = currentVersion
+    
+    // Version increment (skip if --no-version-bump)
+    if (!noVersionBump) {
+      // Determine version increment type
+      let incrementType = versionIncrement
+      if (!incrementType) {
+        // Suggest patch as default
+        incrementType = await promptVersionIncrement(currentVersion, 'patch')
+      }
+      
+      // Calculate new version
+      const newVersion = incrementVersion(currentVersion, incrementType)
+      
+      if (!dryRun) {
+        console.log(`\n📦 Version Update`)
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+        console.log(`Current version: v${currentVersion}`)
+        console.log(`New version:     v${newVersion} (${incrementType})`)
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n')
+        
+        // Update versions
+        updateAllPackageVersions(newVersion)
+        
+        // Update CHANGELOG
+        updateChangelog(newVersion, currentVersion)
+        
+        version = newVersion
+        
+        log(`\n✓ Version updated to v${newVersion}`, 'success')
+        log('✓ CHANGELOG.md updated', 'success')
+        log('\n⚠️  Please review CHANGELOG.md and add your changes before deploying!', 'warn')
+        log('Press Enter to continue with deployment checks, or Ctrl+C to cancel...\n', 'info')
+        
+        // Wait for user confirmation
+        await new Promise(resolve => {
+          const rl = createInterface({
+            input: process.stdin,
+            output: process.stdout
+          })
+          rl.question('', () => {
+            rl.close()
+            resolve()
+          })
+        })
+      } else {
+        // Dry run - just show what would happen
+        version = newVersion
+        log(`Would update version: v${currentVersion} → v${newVersion} (${incrementType})`, 'info')
+      }
+    } else {
+      log('Skipping version increment (--no-version-bump)', 'info')
+    }
+    
+    // Version check (after update)
+    checkVersionConsistency()
     checks.versionConsistency.success = true
     
     // Git status
     checks.git = checkGitStatus()
+    
+    // Commit and push changes if not dry-run and not in CI
+    const isCI = process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true'
+    if (!dryRun && !isCI && !checks.git.clean) {
+      await commitAndPushChanges(version)
+      // Re-check git status after commit
+      checks.git = checkGitStatus()
+    } else if (isCI && !checks.git.clean) {
+      log('Running in CI/CD - skipping git commit/push (should be done before tag)', 'info')
+    }
     
     // npm auth
     checks.npmAuth = checkNpmAuth()
@@ -374,13 +614,20 @@ const deploy = async (options = {}) => {
     // Generate report
     log('Generating deployment report...', 'step')
     const report = generateDeploymentReport(checks, version)
-    const reportPath = join(rootDir, 'deploy', `deployment-report-${version}.md`)
+    const tempDir = join(rootDir, 'temp')
+    if (!existsSync(tempDir)) {
+      exec(`mkdir -p ${tempDir}`, { silent: true })
+    }
+    const reportPath = join(tempDir, `deployment-report-${version}.md`)
     writeFileSync(reportPath, formatReport(report))
-    log(`Report saved: deploy/deployment-report-${version}.md`, 'success')
+    console.log(`\n📄 Deployment report saved:`)
+    console.log(`   ${reportPath}`)
+    log(`Report saved: temp/deployment-report-${version}.md`, 'success')
     
     // Write JSON report
-    const jsonPath = join(rootDir, 'deploy', `deployment-report-${version}.json`)
+    const jsonPath = join(tempDir, `deployment-report-${version}.json`)
     writeFileSync(jsonPath, JSON.stringify(report, null, 2))
+    console.log(`   ${jsonPath}\n`)
     
     // Summary
     console.log('\n📊 Deployment Summary\n')
@@ -452,24 +699,28 @@ const deploy = async (options = {}) => {
         throw new Error(`Failed to publish ${mainPkg.name}: ${err.message}`)
       }
       
-      // Create git tag
-      console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-      log('🏷️  Step 3: Creating Git Tag', 'step')
-      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n')
-      
-      const tag = `v${version}`
-      try {
-        exec(`git rev-parse ${tag}`, { silent: true })
-        log(`Tag ${tag} already exists`, 'warn')
-      } catch {
+      // Create git tag (skip in CI - tag should already exist)
+      if (!isCI) {
+        console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+        log('🏷️  Step 3: Creating Git Tag', 'step')
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n')
+        
+        const tag = `v${version}`
         try {
-          exec(`git tag -a ${tag} -m "Release ${tag}"`)
-          exec(`git push origin ${tag}`)
-          log(`✓ Tag ${tag} created and pushed`, 'success')
-        } catch (err) {
-          log(`Warning: Could not create/push tag: ${err.message}`, 'warn')
-          log('You can create it manually: git tag -a ' + tag + ' -m "Release ' + tag + '"', 'info')
+          exec(`git rev-parse ${tag}`, { silent: true })
+          log(`Tag ${tag} already exists`, 'warn')
+        } catch {
+          try {
+            exec(`git tag -a ${tag} -m "Release ${tag}"`)
+            exec(`git push origin ${tag}`)
+            log(`✓ Tag ${tag} created and pushed`, 'success')
+          } catch (err) {
+            log(`Warning: Could not create/push tag: ${err.message}`, 'warn')
+            log('You can create it manually: git tag -a ' + tag + ' -m "Release ' + tag + '"', 'info')
+          }
         }
+      } else {
+        log('Running in CI/CD - tag should already exist from workflow', 'info')
       }
       
       // Success!
@@ -558,10 +809,25 @@ const deploy = async (options = {}) => {
 
 const parseArgs = () => {
   const args = process.argv.slice(2)
+  
+  // Extract version increment from --version=patch/minor/major
+  let versionIncrement = null
+  const versionArg = args.find(arg => arg.startsWith('--version='))
+  if (versionArg) {
+    versionIncrement = versionArg.split('=')[1]
+    if (!['patch', 'minor', 'major'].includes(versionIncrement)) {
+      console.error(`❌ Invalid version increment: ${versionIncrement}`)
+      console.error('   Must be one of: patch, minor, major')
+      process.exit(1)
+    }
+  }
+  
   const options = {
     dryRun: args.includes('--dry-run'),
     skipTests: args.includes('--skip-tests'),
     skipBuild: args.includes('--skip-build'),
+    versionIncrement,
+    noVersionBump: args.includes('--no-version-bump'),
     help: args.includes('--help') || args.includes('-h')
   }
   return options
@@ -577,10 +843,12 @@ Usage:
   npm run deploy:check        # Dry run only (no publishing)
 
 Options:
-  --dry-run      Run checks without publishing to npm
-  --skip-tests   Skip test suite (not recommended)
-  --skip-build   Skip build step (not recommended)
-  --help, -h     Show this help
+  --dry-run           Run checks without publishing to npm
+  --skip-tests        Skip test suite (not recommended)
+  --skip-build        Skip build step (not recommended)
+  --version=<type>    Version increment: patch, minor, or major (default: prompt)
+  --no-version-bump   Skip automatic version increment (use current version)
+  --help, -h          Show this help
 
 Examples:
   # Check deployment readiness (safe)

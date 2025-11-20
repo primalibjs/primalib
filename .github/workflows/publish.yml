@@ -1,13 +1,9 @@
 name: Publish to npm
 
 on:
-  release:
-    types: [created]
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version to publish (e.g., 0.2.0)'
-        required: true
+  push:
+    tags:
+      - 'v*'
 
 jobs:
   publish:
@@ -19,6 +15,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -30,23 +28,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
       
-      - name: Build
-        run: npm run build
-      
-      - name: Run tests
-        run: npm test
-      
-      - name: Publish packages
-        run: |
-          echo "Publishing @primalib packages..."
-          npm publish --workspace=@primalib/core --access public
-          npm publish --workspace=@primalib/geo --access public
-          npm publish --workspace=@primalib/num --access public
-          npm publish --workspace=@primalib/stat --access public
-          npm publish --workspace=@primalib/lin --access public
-          npm publish --workspace=@primalib/topo --access public
-          npm publish --workspace=@primalib/tree --access public
-          npm publish --workspace=@primalib/web --access public
-          npm publish --workspace=@primalib/primalib --access public
+      - name: Run deployment script
+        run: npm run deploy -- --no-version-bump
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          CI: true
+          GITHUB_ACTIONS: true

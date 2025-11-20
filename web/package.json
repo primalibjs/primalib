@@ -1,6 +1,6 @@
 {
   "name": "@primalib/web",
-  "version": "0.2.02",
+  "version": "0.2.3",
   "description": "⚠️  EXPERIMENTAL - PrimaLib web module - universal web pipeline (browser & node)",
   "main": "./primaweb.mjs",
   "type": "module",
@@ -45,4 +45,3 @@
     "prima3d.mjs"
   ]
 }
-

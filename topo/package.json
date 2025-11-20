@@ -1,6 +1,6 @@
 {
   "name": "@primalib/topo",
-  "version": "0.2.02",
+  "version": "0.2.3",
   "description": "PrimaLib topology module - topological invariants and properties",
   "main": "./primatopo.mjs",
   "type": "module",
@@ -31,4 +31,3 @@
     "primatopo.mjs"
   ]
 }
-

@@ -1,6 +1,6 @@
 {
   "name": "@primalib/lin",
-  "version": "0.2.02",
+  "version": "0.2.3",
   "description": "PrimaLib linear algebra module - vectors, matrices, and polynomials",
   "main": "./primalin.mjs",
   "type": "module",
@@ -33,4 +33,3 @@
     "primalin.mjs"
   ]
 }
-
